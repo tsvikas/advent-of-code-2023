@@ -25,13 +25,12 @@ def extract_gear_ratios(engine_schematic: list[str]):
                     x = line_slice.index("*") + slice_start
                     gears[y, x].append(value)
                     break
-    gear_ratios = []
     expected_number_of_values = 2
-    for location, gear_values in gears.items():
-        if len(gear_values) == expected_number_of_values:
-            gear_ratios.append(gear_values[0] * gear_values[1])
-        elif len(gear_values) not in [1, 0]:
-            raise ValueError(f"Too many gears at {location}: {gear_values}")
+    gear_ratios = [
+        gear_values[0] * gear_values[1]
+        for location, gear_values in gears.items()
+        if len(gear_values) == expected_number_of_values
+    ]
     return gear_ratios
 
 
