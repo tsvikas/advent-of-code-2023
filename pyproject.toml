@@ -62,6 +62,11 @@ ignore = [
     # annoying:
     "RET504",   # flake8-return/unnecessary-assign
     "ANN1",     # flake8-annotations/missing-type-self,missing-type-cls
+    # competitions
+    "INP001",   # __init__.py
+    "D",        # pydocstyle
+    "T201",     # print-statements
+    "TRY003",   # tryceratops/raise-vanilla-args
     # ban something useful for a good reason
     # "C901",     # mccabe/complex-structure
     # "S101",     # flake8-bandit/assert
@@ -72,7 +77,6 @@ ignore = [
     # "FIX",      # flake8-fixme
     # "ERA001",   # eradicate/commented-out-code
     # "PLR091",   # PyLint-Refactor/too-many-*
-    # "TRY003",   # tryceratops/raise-vanilla-args
 ]
 target-version = "py311"
 
