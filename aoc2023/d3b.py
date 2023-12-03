@@ -1,7 +1,7 @@
 import collections
 import re
-from pathlib import Path
 
+from aoc2023.common import INPUTS_DIR
 from aoc2023.d3a import TEST_INPUT  # noqa: F401
 
 
@@ -40,7 +40,11 @@ def process_lines(lines):
 
 
 def main():
-    input_fn = Path("../inputs") / "3.txt"
+    """
+    >>> main()
+    78272573
+    """
+    input_fn = INPUTS_DIR / "3.txt"
     lines = input_fn.read_text().splitlines()
     result = process_lines(lines)
     print(result)

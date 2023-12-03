@@ -1,5 +1,6 @@
 import re
-from pathlib import Path
+
+from aoc2023.common import INPUTS_DIR
 
 TEST_INPUTS = [
     "two1nine",
@@ -53,7 +54,11 @@ def process_lines(lines):
 
 
 def main():
-    input_fn = Path("../inputs") / "1.txt"
+    """
+    >>> main()
+    55701
+    """
+    input_fn = INPUTS_DIR / "1.txt"
     lines = input_fn.read_text().splitlines()
     result = process_lines(lines)
     print(result)

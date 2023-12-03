@@ -1,6 +1,7 @@
 import re
 from dataclasses import dataclass
-from pathlib import Path
+
+from aoc2023.common import INPUTS_DIR
 
 TEST_INPUTS = [
     "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
@@ -63,7 +64,11 @@ def process_lines(lines):
 
 
 def main():
-    input_fn = Path("../inputs") / "2.txt"
+    """
+    >>> main()
+    2505
+    """
+    input_fn = INPUTS_DIR / "2.txt"
     lines = input_fn.read_text().splitlines()
     result = process_lines(lines)
     print(result)

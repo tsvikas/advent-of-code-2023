@@ -1,6 +1,6 @@
 import re
-from pathlib import Path
 
+from aoc2023.common import INPUTS_DIR
 from aoc2023.d2a import (
     TEST_INPUTS,  # noqa: F401
     Balls,
@@ -42,7 +42,11 @@ def process_lines(lines):
 
 
 def main():
-    input_fn = Path("../inputs") / "2.txt"
+    """
+    >>> main()
+    70265
+    """
+    input_fn = INPUTS_DIR / "2.txt"
     lines = input_fn.read_text().splitlines()
     result = process_lines(lines)
     print(result)
