@@ -32,6 +32,10 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"
+
+
 [tool.black]
 target-version = ["py311"]
 preview = false
