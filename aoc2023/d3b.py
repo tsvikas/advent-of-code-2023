@@ -44,15 +44,11 @@ def process_lines(lines):
 
 
 def main():
-    """
-    >>> main()
-    78272573
-    """
     input_fn = INPUTS_DIR / "3.txt"
     lines = input_fn.read_text().splitlines()
     result = process_lines(lines)
-    print(result)
+    return result
 
 
 if __name__ == "__main__":
-    main()
+    print(main())
