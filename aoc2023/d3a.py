@@ -16,24 +16,30 @@ TEST_INPUT = """\
 """
 
 
+def adjacent_area(engine_schematic: list[str], y: int, x1: int, x2: int):
+    return [
+        line0[max(0, x1 - 1) : x2 + 1]
+        for line0 in engine_schematic[max(0, y - 1) : y + 2]
+    ]
+
+
+def contains_part(area: list[str]):
+    return bool(set("".join(area)) - set("0123456789."))
+
+
 def extract_part_numbers(engine_schematic: list[str]):
     """
     >>> extract_part_numbers(TEST_INPUT.splitlines())
     [467, 35, 633, 617, 592, 755, 664, 598]
     """
-    part_numbers = []
-    for line_num, line in enumerate(engine_schematic):
-        # find all numbers in the line
-        for match in re.finditer(r"\d+", line):
-            y = line_num
-            x1, x2 = match.span()
-            value = int(match.group())
-            area = [
-                line0[max(0, x1 - 1) : x2 + 1]
-                for line0 in engine_schematic[max(0, y - 1) : y + 2]
-            ]
-            if set("".join(area)) - set("0123456789."):
-                part_numbers.append(value)
+    part_numbers = [
+        int(match.group())
+        for line_num, line in enumerate(engine_schematic)
+        for match in re.finditer(r"\d+", line)
+        if contains_part(
+            adjacent_area(engine_schematic, line_num, match.start(), match.end())
+        )
+    ]
     return part_numbers
 
 
