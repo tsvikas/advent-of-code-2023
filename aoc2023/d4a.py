@@ -10,16 +10,25 @@ TEST_INPUTS = [
 ]
 
 
-def score_card(line: str) -> int:
+def card_wins_count(line: str) -> int:
     """
-    >>> [score_card(line) for line in TEST_INPUTS]
-    [8, 2, 2, 1, 0, 0]
+    >>> [card_wins_count(line) for line in TEST_INPUTS]
+    [3, 2, 2, 1, 0, 0]
     """
     numbers = line.split(":")[1]
     winning_numbers = [int(s) for s in numbers.split("|")[0].split()]
     card_numbers = [int(s) for s in numbers.split("|")[1].split()]
     num_wins = sum(n in winning_numbers for n in card_numbers)
-    score: int = 0 if num_wins == 0 else 2 ** (num_wins - 1)
+    return num_wins
+
+
+def card_score(line: str) -> int:
+    """
+    >>> [card_score(line) for line in TEST_INPUTS]
+    [8, 2, 2, 1, 0, 0]
+    """
+    num_wins = card_wins_count(line)
+    score = 0 if num_wins == 0 else int(2 ** (num_wins - 1))
     return score
 
 
@@ -28,7 +37,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     13
     """
-    return sum(score_card(line) for line in lines)
+    return sum(card_score(line) for line in lines)
 
 
 def main() -> int:
