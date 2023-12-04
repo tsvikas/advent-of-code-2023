@@ -23,8 +23,8 @@ def process_cards(lines: list[str]) -> int:
     for card_idx, card_count in cards_count.items():
         card = lines[card_idx]
         num_wins = score_card(card)
-        for winned_card in range(card_idx + 1, card_idx + num_wins + 1):
-            cards_count[winned_card] += card_count
+        for card_won in range(card_idx + 1, card_idx + num_wins + 1):
+            cards_count[card_won] += card_count
 
     return sum(cards_count.values())
 
