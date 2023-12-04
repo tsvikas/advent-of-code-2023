@@ -3,9 +3,9 @@ from aocd import data
 from aoc2023.d2a import TEST_INPUTS, Balls  # noqa: F401
 
 
-def process_line(line: str) -> int:
+def get_game_power(line: str) -> int:
     """
-    >>> [process_line(line) for line in TEST_INPUTS]
+    >>> [get_game_power(line) for line in TEST_INPUTS]
     [48, 12, 1560, 630, 36]
     """
     _game_id_str, games_str = line.split(":")
@@ -32,7 +32,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     2286
     """
-    return sum(process_line(line) for line in lines)
+    return sum(get_game_power(line) for line in lines)
 
 
 def main() -> int:

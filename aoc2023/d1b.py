@@ -25,9 +25,9 @@ DIGITS = {
 }
 
 
-def process_line(line: str) -> int:
+def get_digits(line: str) -> int:
     """
-    >>> [process_line(line) for line in TEST_INPUTS]
+    >>> [get_digits(line) for line in TEST_INPUTS]
     [29, 83, 13, 24, 42, 14, 76]
     """
     digits = "|".join(DIGITS.keys())
@@ -52,7 +52,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     281
     """
-    return sum(process_line(line) for line in lines)
+    return sum(get_digits(line) for line in lines)
 
 
 def main() -> int:

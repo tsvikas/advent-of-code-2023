@@ -5,9 +5,9 @@ from aocd import data
 TEST_INPUTS = ["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"]
 
 
-def process_line(line: str) -> int:
+def get_digits(line: str) -> int:
     """
-    >>> [process_line(line) for line in TEST_INPUTS]
+    >>> [get_digits(line) for line in TEST_INPUTS]
     [12, 38, 15, 77]
     """
     match = re.fullmatch(r"[^\d]*(\d).*(\d)[^\d]*", line)
@@ -27,7 +27,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     142
     """
-    return sum(process_line(line) for line in lines)
+    return sum(get_digits(line) for line in lines)
 
 
 def main() -> int:
