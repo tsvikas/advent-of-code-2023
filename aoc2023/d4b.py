@@ -26,7 +26,6 @@ def process_lines(lines: list[str]) -> int:
         num_wins = score_card(card)
         for card_won in range(card_idx + 1, card_idx + num_wins + 1):
             cards_count[card_won] += card_count
-
     return sum(cards_count.values())
 
 

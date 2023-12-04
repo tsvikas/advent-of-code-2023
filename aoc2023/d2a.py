@@ -56,9 +56,10 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     8
     """
-    game_results = dict(process_line(line) for line in lines)
     return sum(
-        game_id for game_id, is_valid_game in game_results.items() if is_valid_game
+        game_id
+        for game_id, is_valid_game in (process_line(line) for line in lines)
+        if is_valid_game
     )
 
 
