@@ -19,16 +19,19 @@ class Balls:
     blue: int = 0
 
 
-def game_is_valid(line: str) -> tuple[int, bool]:
+def game_max_balls(games_str: str) -> Balls:
     """
-    >>> [game_is_valid(line) for line in TEST_INPUTS]
-    [(1, True), (2, True), (3, False), (4, False), (5, True)]
+    >>> game_max_balls(TEST_INPUTS[0].split(':')[1])
+    Balls(red=4, green=2, blue=6)
+    >>> game_max_balls(TEST_INPUTS[1].split(':')[1])
+    Balls(red=1, green=3, blue=4)
+    >>> game_max_balls(TEST_INPUTS[2].split(':')[1])
+    Balls(red=20, green=13, blue=6)
+    >>> game_max_balls(TEST_INPUTS[3].split(':')[1])
+    Balls(red=14, green=3, blue=15)
+    >>> game_max_balls(TEST_INPUTS[4].split(':')[1])
+    Balls(red=6, green=3, blue=2)
     """
-    game_id_str, games_str = line.split(":")
-    game_id_match = re.fullmatch(r"Game (\d+)", game_id_str)
-    if game_id_match is None:
-        raise ValueError(f"Invalid game ID: {game_id_str}")
-    game_id = int(game_id_match.group(1))
     games = [
         Balls(
             **{
@@ -43,6 +46,20 @@ def game_is_valid(line: str) -> tuple[int, bool]:
         green=max(g.green for g in games),
         blue=max(g.blue for g in games),
     )
+    return max_balls
+
+
+def game_is_valid(line: str) -> tuple[int, bool]:
+    """
+    >>> [game_is_valid(line) for line in TEST_INPUTS]
+    [(1, True), (2, True), (3, False), (4, False), (5, True)]
+    """
+    game_id_str, games_str = line.split(":")
+    game_id_match = re.fullmatch(r"Game (\d+)", game_id_str)
+    if game_id_match is None:
+        raise ValueError(f"Invalid game ID: {game_id_str}")
+    game_id = int(game_id_match.group(1))
+    max_balls = game_max_balls(games_str)
     limit_ball = Balls(red=12, green=13, blue=14)
     is_valid_game = all(
         getattr(max_balls, ball) <= getattr(limit_ball, ball)
