@@ -15,9 +15,9 @@ def score_card(line: str) -> int:
     return num_wins
 
 
-def process_cards(lines: list[str]) -> int:
+def process_lines(lines: list[str]) -> int:
     """
-    >>> process_cards(TEST_INPUTS)
+    >>> process_lines(TEST_INPUTS)
     30
     """
     cards_count = {i: 1 for i in range(len(lines))}
@@ -32,7 +32,7 @@ def process_cards(lines: list[str]) -> int:
 
 def main() -> int:
     lines = data.splitlines()
-    result = process_cards(lines)
+    result = process_lines(lines)
     return result
 
 
