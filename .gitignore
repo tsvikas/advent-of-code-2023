@@ -59,3 +59,4 @@ venv/
 
 # specific to this project:
 inputs/
+tests/my_solutions.toml

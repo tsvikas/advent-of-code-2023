@@ -1,17 +1,12 @@
 import importlib
+import tomllib
+from pathlib import Path
 
 import pytest
 
-SOLUTIONS = {
-    "d1a": 56397,
-    "d1b": 55701,
-    "d2a": 2505,
-    "d2b": 70265,
-    "d3a": 536202,
-    "d3b": 78272573,
-    "d4a": 27454,
-    "d4b": 6857330,
-}
+SOLUTIONS = tomllib.loads(
+    Path(__file__).parent.joinpath("my_solutions.toml").read_text()
+)
 
 
 @pytest.mark.parametrize(("name", "expected"), list(SOLUTIONS.items()))
