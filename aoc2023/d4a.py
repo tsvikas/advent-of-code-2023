@@ -1,4 +1,4 @@
-from aoc2023.common import INPUTS_DIR
+from aocd import data
 
 TEST_INPUTS = [
     "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53",
@@ -32,8 +32,7 @@ def process_lines(lines: list[str]) -> int:
 
 
 def main() -> int:
-    input_fn = INPUTS_DIR / "4.txt"
-    lines = input_fn.read_text().splitlines()
+    lines = data.splitlines()
     result = process_lines(lines)
     return result
 

@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from aoc2023.common import INPUTS_DIR
+from aocd import data
 
 TEST_INPUTS = [
     "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
@@ -63,8 +63,7 @@ def process_lines(lines: list[str]) -> int:
 
 
 def main() -> int:
-    input_fn = INPUTS_DIR / "2.txt"
-    lines = input_fn.read_text().splitlines()
+    lines = data.splitlines()
     result = process_lines(lines)
     return result
 

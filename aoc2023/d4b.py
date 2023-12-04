@@ -1,4 +1,5 @@
-from aoc2023.common import INPUTS_DIR
+from aocd import data
+
 from aoc2023.d4a import TEST_INPUTS  # noqa: F401
 
 
@@ -30,8 +31,7 @@ def process_cards(lines: list[str]) -> int:
 
 
 def main() -> int:
-    input_fn = INPUTS_DIR / "4.txt"
-    lines = input_fn.read_text().splitlines()
+    lines = data.splitlines()
     result = process_cards(lines)
     return result
 

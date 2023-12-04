@@ -1,6 +1,6 @@
 import re
 
-from aoc2023.common import INPUTS_DIR
+from aocd import data
 
 TEST_INPUT = """\
 467..114..
@@ -52,8 +52,7 @@ def process_lines(lines: list[str]) -> int:
 
 
 def main() -> int:
-    input_fn = INPUTS_DIR / "3.txt"
-    lines = input_fn.read_text().splitlines()
+    lines = data.splitlines()
     result = process_lines(lines)
     return result
 
