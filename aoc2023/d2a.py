@@ -19,9 +19,9 @@ class Balls:
     blue: int = 0
 
 
-def is_valid_game(line: str) -> tuple[int, bool]:
+def game_is_valid(line: str) -> tuple[int, bool]:
     """
-    >>> [is_valid_game(line) for line in TEST_INPUTS]
+    >>> [game_is_valid(line) for line in TEST_INPUTS]
     [(1, True), (2, True), (3, False), (4, False), (5, True)]
     """
     game_id_str, games_str = line.split(":")
@@ -58,7 +58,7 @@ def process_lines(lines: list[str]) -> int:
     """
     return sum(
         game_id
-        for game_id, is_valid_game in (is_valid_game(line) for line in lines)
+        for game_id, is_valid_game in (game_is_valid(line) for line in lines)
         if is_valid_game
     )
 
