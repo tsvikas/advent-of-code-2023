@@ -13,7 +13,7 @@ TEST_INPUTS = [
 def card_wins_count(line: str) -> int:
     """
     >>> [card_wins_count(line) for line in TEST_INPUTS]
-    [3, 2, 2, 1, 0, 0]
+    [4, 2, 2, 1, 0, 0]
     """
     numbers = line.split(":")[1]
     winning_numbers = [int(s) for s in numbers.split("|")[0].split()]
