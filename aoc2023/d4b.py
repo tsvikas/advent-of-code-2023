@@ -15,18 +15,26 @@ def score_card(line: str) -> int:
     return num_wins
 
 
+def get_cards_count(lines: list[str]) -> list[int]:
+    """
+    >>> get_cards_count(TEST_INPUTS)
+    [1, 2, 4, 8, 14, 1]
+    """
+    cards_count = [1] * len(lines)
+    for card_idx, card_count in enumerate(cards_count):
+        card = lines[card_idx]
+        num_wins = score_card(card)
+        for card_won in range(card_idx + 1, card_idx + num_wins + 1):
+            cards_count[card_won] += card_count
+    return cards_count
+
+
 def process_lines(lines: list[str]) -> int:
     """
     >>> process_lines(TEST_INPUTS)
     30
     """
-    cards_count = {i: 1 for i in range(len(lines))}
-    for card_idx, card_count in cards_count.items():
-        card = lines[card_idx]
-        num_wins = score_card(card)
-        for card_won in range(card_idx + 1, card_idx + num_wins + 1):
-            cards_count[card_won] += card_count
-    return sum(cards_count.values())
+    return sum(get_cards_count(lines))
 
 
 def main() -> int:
