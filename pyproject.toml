@@ -37,6 +37,12 @@ build-backend = "poetry.core.masonry.api"
 addopts = "--doctest-modules"
 
 
+[tool.mypy]
+mypy_path = "stubs"
+packages = "aoc2023"
+strict = true
+
+
 [tool.black]
 target-version = ["py311"]
 preview = false
