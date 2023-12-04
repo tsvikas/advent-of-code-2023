@@ -14,10 +14,7 @@ SOLUTIONS = {
 }
 
 
-@pytest.mark.parametrize(
-    ("name", "expected"),
-    list(SOLUTIONS.items()),
-)
+@pytest.mark.parametrize(("name", "expected"), list(SOLUTIONS.items()))
 def test_all(name: str, expected: int):
     module = importlib.import_module(f"aoc2023.{name}")
     assert module.main() == expected
