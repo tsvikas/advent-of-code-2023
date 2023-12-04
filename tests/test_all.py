@@ -1,4 +1,4 @@
-from aoc2023 import d1a, d1b, d2a, d2b, d3a, d3b
+from aoc2023 import d1a, d1b, d2a, d2b, d3a, d3b, d4a, d4b
 
 
 def test_all():
@@ -8,3 +8,5 @@ def test_all():
     assert d2b.main() == 70265
     assert d3a.main() == 536202
     assert d3b.main() == 78272573
+    assert d4a.main() == 27454
+    assert d4b.main() == 6857330
