@@ -5,7 +5,7 @@ from aoc2023.common import INPUTS_DIR
 from aoc2023.d3a import TEST_INPUT  # noqa: F401
 
 
-def extract_gear_ratios(engine_schematic: list[str]):
+def extract_gear_ratios(engine_schematic: list[str]) -> list[int]:
     """
     >>> extract_gear_ratios(TEST_INPUT.splitlines())
     [16345, 451490]
@@ -34,7 +34,7 @@ def extract_gear_ratios(engine_schematic: list[str]):
     return gear_ratios
 
 
-def process_lines(lines):
+def process_lines(lines: list[str]) -> int:
     """
     >>> process_lines(TEST_INPUT.splitlines())
     467835
@@ -42,7 +42,7 @@ def process_lines(lines):
     return sum(extract_gear_ratios(lines))
 
 
-def main():
+def main() -> int:
     input_fn = INPUTS_DIR / "3.txt"
     lines = input_fn.read_text().splitlines()
     result = process_lines(lines)

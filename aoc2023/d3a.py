@@ -16,18 +16,18 @@ TEST_INPUT = """\
 """
 
 
-def adjacent_area(engine_schematic: list[str], y: int, x1: int, x2: int):
+def adjacent_area(engine_schematic: list[str], y: int, x1: int, x2: int) -> list[str]:
     return [
         line0[max(0, x1 - 1) : x2 + 1]
         for line0 in engine_schematic[max(0, y - 1) : y + 2]
     ]
 
 
-def contains_part(area: list[str]):
+def contains_part(area: list[str]) -> bool:
     return bool(set("".join(area)) - set("0123456789."))
 
 
-def extract_part_numbers(engine_schematic: list[str]):
+def extract_part_numbers(engine_schematic: list[str]) -> list[int]:
     """
     >>> extract_part_numbers(TEST_INPUT.splitlines())
     [467, 35, 633, 617, 592, 755, 664, 598]
@@ -43,7 +43,7 @@ def extract_part_numbers(engine_schematic: list[str]):
     return part_numbers
 
 
-def process_lines(lines):
+def process_lines(lines: list[str]) -> int:
     """
     >>> process_lines(TEST_INPUT.splitlines())
     4361
@@ -51,7 +51,7 @@ def process_lines(lines):
     return sum(extract_part_numbers(lines))
 
 
-def main():
+def main() -> int:
     input_fn = INPUTS_DIR / "3.txt"
     lines = input_fn.read_text().splitlines()
     result = process_lines(lines)

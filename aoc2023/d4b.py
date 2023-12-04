@@ -2,7 +2,7 @@ from aoc2023.common import INPUTS_DIR
 from aoc2023.d4a import TEST_INPUTS  # noqa: F401
 
 
-def score_card(line):
+def score_card(line: str) -> int:
     """
     >>> [score_card(line) for line in TEST_INPUTS]
     [4, 2, 2, 1, 0, 0]
@@ -14,7 +14,7 @@ def score_card(line):
     return num_wins
 
 
-def process_cards(lines):
+def process_cards(lines: list[str]) -> int:
     """
     >>> process_cards(TEST_INPUTS)
     30
@@ -29,7 +29,7 @@ def process_cards(lines):
     return sum(cards_count.values())
 
 
-def main():
+def main() -> int:
     input_fn = INPUTS_DIR / "4.txt"
     lines = input_fn.read_text().splitlines()
     result = process_cards(lines)

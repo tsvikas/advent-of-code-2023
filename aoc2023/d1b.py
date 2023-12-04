@@ -25,7 +25,7 @@ DIGITS = {
 }
 
 
-def process_line(line):
+def process_line(line: str) -> int:
     """
     >>> [process_line(line) for line in TEST_INPUTS]
     [29, 83, 13, 24, 42, 14, 76]
@@ -39,13 +39,15 @@ def process_line(line):
         second_digit = int(DIGITS.get(second_digit, second_digit))
     else:
         match = re.fullmatch(r".*(\d|" + digits + ").*", line)
-        digit = second_digit = match.group(1)
+        if match is None:
+            raise ValueError(f"Invalid line: {line}")
+        digit = match.group(1)
         digit = int(DIGITS.get(digit, digit))
         first_digit = second_digit = digit
     return 10 * first_digit + second_digit
 
 
-def process_lines(lines):
+def process_lines(lines: list[str]) -> int:
     """
     >>> process_lines(TEST_INPUTS)
     281
@@ -53,7 +55,7 @@ def process_lines(lines):
     return sum(process_line(line) for line in lines)
 
 
-def main():
+def main() -> int:
     input_fn = INPUTS_DIR / "1.txt"
     lines = input_fn.read_text().splitlines()
     result = process_lines(lines)
