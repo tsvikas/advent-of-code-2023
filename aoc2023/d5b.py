@@ -76,13 +76,13 @@ def use_map(maps: Map, src_ranges: SrcRanges):
 def use_maps(maps: dict[str, Map], src_ranges: SrcRanges):
     """
     >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
-    >>> use_maps(maps), [(79, 79+1)])
+    >>> use_maps(maps, [(79, 79+1)])
     [(82, 83)]
-    >>> use_maps(maps), [(14, 14+1)])
+    >>> use_maps(maps, [(14, 14+1)])
     [(43, 44)]
-    >>> use_maps(maps), [(55, 55+1)])
+    >>> use_maps(maps, [(55, 55+1)])
     [(86, 87)]
-    >>> use_maps(maps), [(13, 13+1)])
+    >>> use_maps(maps, [(13, 13+1)])
     [(35, 36)]
     """
     current_ranges = src_ranges
