@@ -65,6 +65,12 @@ class RangeMap:
     def from_line(cls, line: str) -> "RangeMap":
         return cls(*[int(w) for w in line.split()])
 
+    def __repr__(self):
+        return (
+            f"{self.destination_range_start}<{self.source_range_start}"
+            f"+{self.range_length}"
+        )
+
 
 @dataclass
 class Map:
@@ -90,6 +96,10 @@ class Map:
 
 
 def create_maps(lines: list[str]) -> dict[str, Map]:
+    """
+    >>> create_maps(TEST_INPUT.splitlines()[2:])['water-to-light']
+    Map(range_maps=[88<18+7, 18<25+70])
+    """
     maps_lines = more_itertools.split_at(lines, lambda line: line == "")
     maps = {
         map_lines[0].replace(" map:", ""): Map.from_lines(map_lines[1:])
@@ -113,14 +123,8 @@ def find_location_from_seeds(lines: list[str]) -> list[int]:
 def find_location_from_seed(maps: dict[str, Map], seed: int) -> int:
     """
     >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
-    >>> find_location_from_seed(maps, 79)
-    82
-    >>> find_location_from_seed(maps, 14)
-    43
-    >>> find_location_from_seed(maps, 55)
-    86
-    >>> find_location_from_seed(maps, 13)
-    35
+    >>> [find_location_from_seed(maps, seed) for seed in [79, 14, 55, 13]]
+    [82, 43, 86, 35]
     """
     current_value = seed
     current_type = "seed"
