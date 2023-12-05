@@ -10,6 +10,7 @@ packages = [{include = "aoc2023"}]
 [tool.poetry.dependencies]
 python = "~3.11"
 advent-of-code-data = "^2.0.1"
+more-itertools = "^10.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3"
@@ -74,9 +75,9 @@ ignore = [
     "D",        # pydocstyle
     "T201",     # print-statements
     "TRY003",   # tryceratops/raise-vanilla-args
+    "S101",     # flake8-bandit/assert
     # ban something useful for a good reason
     # "C901",     # mccabe/complex-structure
-    # "S101",     # flake8-bandit/assert
     # "FBT001",   # flake8-boolean-trap/boolean-type-hint-positional-argument
     # "FBT002",   # flake8-boolean-trap/boolean-default-value-positional-argument
     # "DTZ",      # flake8-datetimez
