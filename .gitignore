@@ -60,3 +60,4 @@ venv/
 # specific to this project:
 inputs/
 tests/my_solutions.toml
+aoc2023/template01.py
