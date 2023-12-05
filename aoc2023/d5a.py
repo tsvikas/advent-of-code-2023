@@ -112,13 +112,14 @@ def find_location_from_seeds(lines: list[str]) -> list[int]:
 
 def find_location_from_seed(maps: dict[str, Map], seed: int) -> int:
     """
-    >>> find_location_from_seed(create_maps(TEST_INPUT.splitlines()[2:]), 79)
+    >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
+    >>> find_location_from_seed(maps, 79)
     82
-    >>> find_location_from_seed(create_maps(TEST_INPUT.splitlines()[2:]), 14)
+    >>> find_location_from_seed(maps, 14)
     43
-    >>> find_location_from_seed(create_maps(TEST_INPUT.splitlines()[2:]), 55)
+    >>> find_location_from_seed(maps, 55)
     86
-    >>> find_location_from_seed(create_maps(TEST_INPUT.splitlines()[2:]), 13)
+    >>> find_location_from_seed(maps, 13)
     35
     """
     current_value = seed
