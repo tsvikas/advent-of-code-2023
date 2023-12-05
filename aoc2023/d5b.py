@@ -10,42 +10,58 @@ SrcRanges = list[SrcRange]
 def use_range_map(
     range_map: RangeMap, src_ranges: SrcRanges
 ) -> tuple[SrcRanges, SrcRanges]:
-    map_dst_start, map_src_start, map_length = range_map
-    map_src_end = map_src_start + map_length
-    map_change = map_dst_start - map_src_start
     passing = []
     remaining = []
     for src_range in src_ranges:
         src_range_start, src_range_end = src_range
-        if src_range_end <= map_src_start or map_src_end <= src_range_start:
+        if (
+            src_range_end <= range_map.source_range_start
+            or range_map.source_range_end <= src_range_start
+        ):
             remaining.append(src_range)
-        elif map_src_start <= src_range_start <= src_range_end <= map_src_end:
-            passing.append((src_range_start + map_change, src_range_end + map_change))
+        elif (
+            range_map.source_range_start
+            <= src_range_start
+            <= src_range_end
+            <= range_map.source_range_end
+        ):
+            passing.append(
+                (
+                    src_range_start + range_map.map_change,
+                    src_range_end + range_map.map_change,
+                )
+            )
         else:
             # possible orders:
             # ss ms se me
             # ss ms me se
             # ms ss me se
-            left_start = min(src_range_start, map_src_start)
-            left_end = map_src_start
-            right_start = map_src_end
-            right_end = max(src_range_end, map_src_end)
-            middle_start = max(src_range_start, map_src_start)
-            middle_end = min(src_range_end, map_src_end)
+            left_start = min(src_range_start, range_map.source_range_start)
+            left_end = range_map.source_range_start
+            right_start = range_map.source_range_end
+            right_end = max(src_range_end, range_map.source_range_end)
+            middle_start = max(src_range_start, range_map.source_range_start)
+            middle_end = min(src_range_end, range_map.source_range_end)
             if left_start < left_end:
                 remaining.append((left_start, left_end))
             if right_start < right_end:
                 remaining.append((right_start, right_end))
             if middle_start < middle_end:
-                passing.append((middle_start + map_change, middle_end + map_change))
+                passing.append(
+                    (
+                        middle_start + range_map.map_change,
+                        middle_end + range_map.map_change,
+                    )
+                )
     return passing, remaining
 
 
 def use_map(maps: Map, src_ranges: SrcRanges):
     """
-    >>> use_map([(50, 98, 2), (52, 50, 48)], [(79, 79+1)])
+    >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
+    >>> use_map(maps["seed-to-soil"], [(79, 79+1)])
     [(81, 82)]
-    >>> use_map([(0, 15, 37), (37, 52, 2), (39, 0, 15)], [(81, 81+1)])
+    >>> use_map(maps["soil-to-fertilizer"], [(81, 81+1)])
     [(81, 82)]
     """
 
@@ -59,13 +75,14 @@ def use_map(maps: Map, src_ranges: SrcRanges):
 
 def use_maps(maps: dict[str, Map], src_ranges: SrcRanges):
     """
-    >>> use_maps(create_maps(TEST_INPUT.splitlines()[2:]), [(79, 79+1)])
+    >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
+    >>> use_maps(maps), [(79, 79+1)])
     [(82, 83)]
-    >>> use_maps(create_maps(TEST_INPUT.splitlines()[2:]), [(14, 14+1)])
+    >>> use_maps(maps), [(14, 14+1)])
     [(43, 44)]
-    >>> use_maps(create_maps(TEST_INPUT.splitlines()[2:]), [(55, 55+1)])
+    >>> use_maps(maps), [(55, 55+1)])
     [(86, 87)]
-    >>> use_maps(create_maps(TEST_INPUT.splitlines()[2:]), [(13, 13+1)])
+    >>> use_maps(maps), [(13, 13+1)])
     [(35, 36)]
     """
     current_ranges = src_ranges

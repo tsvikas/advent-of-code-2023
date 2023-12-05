@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 import more_itertools
 from aocd import data
 
@@ -36,55 +38,58 @@ humidity-to-location map:
 60 56 37
 56 93 4
 """
-RangeMap = tuple[int, int, int]
+
+
+@dataclass
+class RangeMap:
+    destination_range_start: int
+    source_range_start: int
+    range_length: int
+
+    @property
+    def destination_range_end(self) -> int:
+        return self.destination_range_start + self.range_length
+
+    @property
+    def source_range_end(self) -> int:
+        return self.source_range_start + self.range_length
+
+    @property
+    def map_change(self) -> int:
+        return self.destination_range_start - self.source_range_start
+
+    def in_range(self, value: int) -> bool:
+        return self.source_range_start <= value < self.source_range_end
+
+    @classmethod
+    def from_line(cls, line: str) -> "RangeMap":
+        return cls(*[int(w) for w in line.split()])
+
+
 Map = list[RangeMap]
 
 
-def use_map(map_lines: Map, value: int) -> int:
+def use_map(map_ranges: Map, value: int) -> int:
     """
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 0)
-    0
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 1)
-    1
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 48)
-    48
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 49)
-    49
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 50)
-    52
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 51)
-    53
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 96)
-    98
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 97)
-    99
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 98)
-    50
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 99)
-    51
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 79)
-    81
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 14)
-    14
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 55)
-    57
-    >>> use_map([(50, 98, 2), (52, 50, 48)], 13)
-    13
+    >>> map_ranges = [RangeMap(50, 98, 2), RangeMap(52, 50, 48)]
+    >>> [use_map(map_ranges, value) for value in [0, 1, 48, 49, 50, 51, 96, 97, 98, 99]]
+    [0, 1, 48, 49, 52, 53, 98, 99, 50, 51]
+    >>> [use_map(map_ranges, value) for value in [79, 14, 55, 13]]
+    [81, 14, 57, 13]
     """
-    for line in map_lines:
-        destination_range_start, source_range_start, range_length = line
-        if source_range_start <= value < source_range_start + range_length:
-            return destination_range_start + value - source_range_start
+    for map_range in map_ranges:
+        if map_range.in_range(value):
+            return value + map_range.map_change
     return value
 
 
 def create_maps(lines: list[str]) -> dict[str, Map]:
-    map_strs = more_itertools.split_at(lines, lambda line: line == "")
+    maps_lines = more_itertools.split_at(lines, lambda line: line == "")
     maps = {
-        map_str[0].replace(" map:", ""): [
-            tuple(int(w) for w in map_line.split()) for map_line in map_str[1:]
+        map_lines[0].replace(" map:", ""): [
+            RangeMap.from_line(map_line) for map_line in map_lines[1:]
         ]
-        for map_str in map_strs
+        for map_lines in maps_lines
     }
     return maps
 
