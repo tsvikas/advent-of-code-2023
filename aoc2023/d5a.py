@@ -108,9 +108,9 @@ def create_maps(lines: list[str]) -> dict[str, Map]:
     return maps
 
 
-def find_location_from_seeds(lines: list[str]) -> list[int]:
+def find_locations_from_input(lines: list[str]) -> list[int]:
     """
-    >>> find_location_from_seeds(TEST_INPUT.splitlines())
+    >>> find_locations_from_input(TEST_INPUT.splitlines())
     [82, 43, 86, 35]
     """
     seeds = [int(w) for w in lines.pop(0).split(":")[1].split()]
@@ -141,7 +141,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUT.splitlines())
     35
     """
-    return min(find_location_from_seeds(lines))
+    return min(find_locations_from_input(lines))
 
 
 def main() -> int:
