@@ -1,10 +1,28 @@
+from dataclasses import dataclass
+
 import more_itertools
 from aocd import data
 
 from aoc2023.d5a import TEST_INPUT, RangeMap  # noqa: F401
 
+
+@dataclass
+class SrcRange:
+    start: int
+    length: int
+
+    @property
+    def end(self) -> int:
+        return self.start + self.length
+
+    def in_range(self, value: int) -> bool:
+        return self.start <= value < self.end
+
+    def __repr__(self) -> str:
+        return f"{self.start}+{self.length}"
+
+
 Map = list[RangeMap]
-SrcRange = tuple[int, int]
 SrcRanges = list[SrcRange]
 
 
@@ -25,22 +43,21 @@ def use_range_map(
     passing = []
     remaining = []
     for src_range in src_ranges:
-        src_range_start, src_range_end = src_range
         if (
-            src_range_end <= range_map.source_range_start
-            or range_map.source_range_end <= src_range_start
+            src_range.end <= range_map.source_range_start
+            or range_map.source_range_end <= src_range.start
         ):
             remaining.append(src_range)
         elif (
             range_map.source_range_start
-            <= src_range_start
-            <= src_range_end
+            <= src_range.start
+            <= src_range.end
             <= range_map.source_range_end
         ):
             passing.append(
-                (
-                    src_range_start + range_map.map_change,
-                    src_range_end + range_map.map_change,
+                SrcRange(
+                    src_range.start + range_map.map_change,
+                    src_range.length,
                 )
             )
         else:
@@ -48,21 +65,21 @@ def use_range_map(
             # ss ms se me
             # ss ms me se
             # ms ss me se
-            left_start = min(src_range_start, range_map.source_range_start)
+            left_start = min(src_range.start, range_map.source_range_start)
             left_end = range_map.source_range_start
             right_start = range_map.source_range_end
-            right_end = max(src_range_end, range_map.source_range_end)
-            middle_start = max(src_range_start, range_map.source_range_start)
-            middle_end = min(src_range_end, range_map.source_range_end)
+            right_end = max(src_range.end, range_map.source_range_end)
+            middle_start = max(src_range.start, range_map.source_range_start)
+            middle_end = min(src_range.end, range_map.source_range_end)
             if left_start < left_end:
-                remaining.append((left_start, left_end))
+                remaining.append(SrcRange(left_start, left_end - left_start))
             if right_start < right_end:
-                remaining.append((right_start, right_end))
+                remaining.append(SrcRange(right_start, right_end - right_start))
             if middle_start < middle_end:
                 passing.append(
-                    (
+                    SrcRange(
                         middle_start + range_map.map_change,
-                        middle_end + range_map.map_change,
+                        middle_end - middle_start,
                     )
                 )
     return passing, remaining
@@ -71,10 +88,10 @@ def use_range_map(
 def use_map(maps: Map, src_ranges: SrcRanges):
     """
     >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
-    >>> use_map(maps["seed-to-soil"], [(79, 79+1)])
-    [(81, 82)]
-    >>> use_map(maps["soil-to-fertilizer"], [(81, 81+1)])
-    [(81, 82)]
+    >>> use_map(maps["seed-to-soil"], [SrcRange(79, 1)])
+    [81+1]
+    >>> use_map(maps["soil-to-fertilizer"], [SrcRange(81, 1)])
+    [81+1]
     """
 
     passing = []
@@ -88,14 +105,14 @@ def use_map(maps: Map, src_ranges: SrcRanges):
 def use_maps(maps: dict[str, Map], src_ranges: SrcRanges):
     """
     >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
-    >>> use_maps(maps, [(79, 79+1)])
-    [(82, 83)]
-    >>> use_maps(maps, [(14, 14+1)])
-    [(43, 44)]
-    >>> use_maps(maps, [(55, 55+1)])
-    [(86, 87)]
-    >>> use_maps(maps, [(13, 13+1)])
-    [(35, 36)]
+    >>> use_maps(maps, [SrcRange(79, 1)])
+    [82+1]
+    >>> use_maps(maps, [SrcRange(14, 1)])
+    [43+1]
+    >>> use_maps(maps, [SrcRange(55, 1)])
+    [86+1]
+    >>> use_maps(maps, [SrcRange(13, 1)])
+    [35+1]
     """
     current_ranges = src_ranges
     current_type = "seed"
@@ -110,12 +127,12 @@ def use_maps(maps: dict[str, Map], src_ranges: SrcRanges):
 def find_location_ranges_from_seed_ranges(lines: list[str]) -> SrcRanges:
     """
     >>> find_location_ranges_from_seed_ranges(TEST_INPUT.splitlines())
-    [(60, 61), (86, 90), (94, 97), (82, 85), (56, 60), (46, 56), (97, 99)]
+    [60+1, 86+4, 94+3, 82+3, 56+4, 46+10, 97+2]
     """
     seeds_str = lines.pop(0).split(":")[1]
     seed_ints = [int(w) for w in seeds_str.split()]
     seed_ranges = [
-        (start, start + length)
+        SrcRange(start, length)
         for start, length in more_itertools.chunked(seed_ints, 2)
     ]
 
@@ -127,12 +144,12 @@ def find_location_ranges_from_seed_ranges(lines: list[str]) -> SrcRanges:
 
 def min_in_ranges(src_ranges: SrcRanges) -> int:
     """
-    >>> min_in_ranges([(1, 2), (3, 4)])
+    >>> min_in_ranges([SrcRange(1, 2), SrcRange(3, 2)])
     1
-    >>> min_in_ranges([(3, 4), (1, 4)])
+    >>> min_in_ranges([SrcRange(3, 7), SrcRange(1, 7)])
     1
     """
-    return min(src_range[0] for src_range in src_ranges)
+    return min(src_range.start for src_range in src_ranges)
 
 
 def process_lines(lines: list[str]) -> int:
