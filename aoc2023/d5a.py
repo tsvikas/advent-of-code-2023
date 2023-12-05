@@ -66,29 +66,33 @@ class RangeMap:
         return cls(*[int(w) for w in line.split()])
 
 
-Map = list[RangeMap]
+@dataclass
+class Map:
+    range_maps: list[RangeMap]
 
+    @classmethod
+    def from_lines(cls, lines: list[str]) -> "Map":
+        return cls([RangeMap.from_line(line) for line in lines])
 
-def use_map(map_ranges: Map, value: int) -> int:
-    """
-    >>> map_ranges = [RangeMap(50, 98, 2), RangeMap(52, 50, 48)]
-    >>> [use_map(map_ranges, value) for value in [0, 1, 48, 49, 50, 51, 96, 97, 98, 99]]
-    [0, 1, 48, 49, 52, 53, 98, 99, 50, 51]
-    >>> [use_map(map_ranges, value) for value in [79, 14, 55, 13]]
-    [81, 14, 57, 13]
-    """
-    for map_range in map_ranges:
-        if map_range.in_range(value):
-            return value + map_range.map_change
-    return value
+    def pass_value(self, value: int) -> int:
+        """
+        >>> map_ranges = Map([RangeMap(50, 98, 2), RangeMap(52, 50, 48)])
+        >>> values = [0, 1, 48, 49, 50, 51, 96, 97, 98, 99]
+        >>> [map_ranges.pass_value(value) for value in values]
+        [0, 1, 48, 49, 52, 53, 98, 99, 50, 51]
+        >>> [map_ranges.pass_value(value) for value in [79, 14, 55, 13]]
+        [81, 14, 57, 13]
+        """
+        for range_map in self.range_maps:
+            if range_map.in_range(value):
+                return value + range_map.map_change
+        return value
 
 
 def create_maps(lines: list[str]) -> dict[str, Map]:
     maps_lines = more_itertools.split_at(lines, lambda line: line == "")
     maps = {
-        map_lines[0].replace(" map:", ""): [
-            RangeMap.from_line(map_line) for map_line in map_lines[1:]
-        ]
+        map_lines[0].replace(" map:", ""): Map.from_lines(map_lines[1:])
         for map_lines in maps_lines
     }
     return maps
@@ -121,7 +125,7 @@ def find_location_from_seed(maps: dict[str, Map], seed: int) -> int:
     current_type = "seed"
     for map_name, map_lines in maps.items():
         assert map_name.startswith(f"{current_type}-to-")
-        current_value = use_map(map_lines, current_value)
+        current_value = map_lines.pass_value(current_value)
         current_type = map_name.split("-to-")[1]
     assert current_type == "location"
     return current_value

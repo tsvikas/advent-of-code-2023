@@ -1,10 +1,22 @@
 import more_itertools
 from aocd import data
 
-from aoc2023.d5a import TEST_INPUT, Map, RangeMap, create_maps  # noqa: F401
+from aoc2023.d5a import TEST_INPUT, RangeMap  # noqa: F401
 
+Map = list[RangeMap]
 SrcRange = tuple[int, int]
 SrcRanges = list[SrcRange]
+
+
+def create_maps(lines: list[str]) -> dict[str, Map]:
+    maps_lines = more_itertools.split_at(lines, lambda line: line == "")
+    maps = {
+        map_lines[0].replace(" map:", ""): [
+            RangeMap.from_line(map_line) for map_line in map_lines[1:]
+        ]
+        for map_lines in maps_lines
+    }
+    return maps
 
 
 def use_range_map(
