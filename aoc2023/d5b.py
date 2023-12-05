@@ -85,7 +85,7 @@ def use_range_map(
     return passing, remaining
 
 
-def use_map(maps: Map, src_ranges: SrcRanges):
+def use_map(maps: Map, src_ranges: SrcRanges) -> SrcRanges:
     """
     >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
     >>> use_map(maps["seed-to-soil"], [SrcRange(79, 1)])
@@ -102,7 +102,7 @@ def use_map(maps: Map, src_ranges: SrcRanges):
     return passing + remaining
 
 
-def use_maps(maps: dict[str, Map], src_ranges: SrcRanges):
+def use_maps(maps: dict[str, Map], src_ranges: SrcRanges) -> SrcRanges:
     """
     >>> maps = create_maps(TEST_INPUT.splitlines()[2:])
     >>> use_maps(maps, [SrcRange(79, 1)])

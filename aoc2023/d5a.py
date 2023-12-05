@@ -65,7 +65,7 @@ class RangeMap:
     def from_line(cls, line: str) -> "RangeMap":
         return cls(*[int(w) for w in line.split()])
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"{self.destination_range_start}<{self.source_range_start}"
             f"+{self.range_length}"
