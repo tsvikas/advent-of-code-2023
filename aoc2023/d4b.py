@@ -3,15 +3,14 @@ from aocd import data
 from aoc2023.d4a import TEST_INPUTS, Card  # noqa: F401
 
 
-def get_cards_count(lines: list[str]) -> list[int]:
+def get_cards_count(cards: list[Card]) -> list[int]:
     """
     >>> get_cards_count(TEST_INPUTS)
     [1, 2, 4, 8, 14, 1]
     """
-    cards_count = [1] * len(lines)
+    cards_count = [1] * len(cards)
     for card_idx, card_count in enumerate(cards_count):
-        card = Card.from_line(lines[card_idx])
-        num_wins = card.wins_count()
+        num_wins = cards[card_idx].wins_count()
         for card_won in range(card_idx + 1, card_idx + num_wins + 1):
             cards_count[card_won] += card_count
     return cards_count
@@ -22,7 +21,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     30
     """
-    return sum(get_cards_count(lines))
+    return sum(get_cards_count([Card.from_line(line) for line in lines]))
 
 
 def main() -> int:
