@@ -1,6 +1,6 @@
 from aocd import data
 
-from aoc2023.d4a import TEST_INPUTS, card_wins_count  # noqa: F401
+from aoc2023.d4a import TEST_INPUTS, Card  # noqa: F401
 
 
 def get_cards_count(lines: list[str]) -> list[int]:
@@ -10,8 +10,8 @@ def get_cards_count(lines: list[str]) -> list[int]:
     """
     cards_count = [1] * len(lines)
     for card_idx, card_count in enumerate(cards_count):
-        card = lines[card_idx]
-        num_wins = card_wins_count(card)
+        card = Card.from_line(lines[card_idx])
+        num_wins = card.wins_count()
         for card_won in range(card_idx + 1, card_idx + num_wins + 1):
             cards_count[card_won] += card_count
     return cards_count

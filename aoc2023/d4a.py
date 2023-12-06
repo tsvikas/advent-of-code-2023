@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from aocd import data
 
 TEST_INPUTS = [
@@ -10,26 +12,35 @@ TEST_INPUTS = [
 ]
 
 
-def card_wins_count(line: str) -> int:
-    """
-    >>> [card_wins_count(line) for line in TEST_INPUTS]
-    [4, 2, 2, 1, 0, 0]
-    """
-    numbers = line.split(":")[1]
-    winning_numbers = [int(s) for s in numbers.split("|")[0].split()]
-    card_numbers = [int(s) for s in numbers.split("|")[1].split()]
-    num_wins = sum(n in winning_numbers for n in card_numbers)
-    return num_wins
+@dataclass
+class Card:
+    card_id: int
+    winning_numbers: list[int]
+    card_numbers: list[int]
 
+    @classmethod
+    def from_line(cls, line: str) -> "Card":
+        card_id = int(line.split(":")[0].replace("Card ", ""))
+        numbers = line.split(":")[1]
+        winning_numbers = [int(s) for s in numbers.split("|")[0].split()]
+        card_numbers = [int(s) for s in numbers.split("|")[1].split()]
+        return cls(card_id, winning_numbers, card_numbers)
 
-def card_score(line: str) -> int:
-    """
-    >>> [card_score(line) for line in TEST_INPUTS]
-    [8, 2, 2, 1, 0, 0]
-    """
-    num_wins = card_wins_count(line)
-    score = 0 if num_wins == 0 else int(2 ** (num_wins - 1))
-    return score
+    def wins_count(self) -> int:
+        """
+        >>> [Card.from_line(line).wins_count() for line in TEST_INPUTS]
+        [4, 2, 2, 1, 0, 0]
+        """
+        return sum(n in self.winning_numbers for n in self.card_numbers)
+
+    def score(self) -> int:
+        """
+        >>> [Card.from_line(line).score() for line in TEST_INPUTS]
+        [8, 2, 2, 1, 0, 0]
+        """
+        num_wins = self.wins_count()
+        score = 0 if num_wins == 0 else int(2 ** (num_wins - 1))
+        return score
 
 
 def process_lines(lines: list[str]) -> int:
@@ -37,7 +48,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     13
     """
-    return sum(card_score(line) for line in lines)
+    return sum(Card.from_line(line).score() for line in lines)
 
 
 def main() -> int:
