@@ -8,9 +8,9 @@ def parse_lines(lines: list[str]) -> Race:
     >>> parse_lines(TEST_INPUT.splitlines())
     Race(time=71530, distance=940200)
     """
-    times = int("".join(lines[0].split()[1:]))
-    distances = int("".join(lines[1].split()[1:]))
-    return Race(times, distances)
+    time = int("".join(lines[0].split()[1:]))
+    distance = int("".join(lines[1].split()[1:]))
+    return Race(time, distance)
 
 
 def process_lines(lines: list[str]) -> int:
