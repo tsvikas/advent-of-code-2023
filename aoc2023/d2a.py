@@ -1,5 +1,5 @@
-import re
 from dataclasses import dataclass
+from typing import Self
 
 from aocd import data
 
@@ -18,54 +18,59 @@ class Balls:
     green: int = 0
     blue: int = 0
 
-
-def game_max_balls(games_str: str) -> Balls:
-    """
-    >>> game_max_balls(TEST_INPUTS[0].split(':')[1])
-    Balls(red=4, green=2, blue=6)
-    >>> game_max_balls(TEST_INPUTS[1].split(':')[1])
-    Balls(red=1, green=3, blue=4)
-    >>> game_max_balls(TEST_INPUTS[2].split(':')[1])
-    Balls(red=20, green=13, blue=6)
-    >>> game_max_balls(TEST_INPUTS[3].split(':')[1])
-    Balls(red=14, green=3, blue=15)
-    >>> game_max_balls(TEST_INPUTS[4].split(':')[1])
-    Balls(red=6, green=3, blue=2)
-    """
-    games = [
-        Balls(
+    @classmethod
+    def from_string(cls, s: str) -> "Balls":
+        return cls(
             **{
                 ball_str.split()[1]: int(ball_str.split()[0])
-                for ball_str in game_str.split(", ")
+                for ball_str in s.split(", ")
             }
         )
-        for game_str in games_str.split(";")
-    ]
-    max_balls = Balls(
-        red=max(g.red for g in games),
-        green=max(g.green for g in games),
-        blue=max(g.blue for g in games),
-    )
-    return max_balls
 
 
-def game_is_valid(line: str) -> tuple[int, bool]:
-    """
-    >>> [game_is_valid(line) for line in TEST_INPUTS]
-    [(1, True), (2, True), (3, False), (4, False), (5, True)]
-    """
-    game_id_str, games_str = line.split(":")
-    game_id_match = re.fullmatch(r"Game (\d+)", game_id_str)
-    if game_id_match is None:
-        raise ValueError(f"Invalid game ID: {game_id_str}")
-    game_id = int(game_id_match.group(1))
-    max_balls = game_max_balls(games_str)
-    limit_ball = Balls(red=12, green=13, blue=14)
-    is_valid_game = all(
-        getattr(max_balls, ball) <= getattr(limit_ball, ball)
-        for ball in ("red", "green", "blue")
-    )
-    return game_id, is_valid_game
+@dataclass
+class Game:
+    game_id: int
+    draws: list[Balls]
+
+    @classmethod
+    def from_line(cls, line: str) -> Self:
+        game_id_str, games_str = line.split(":")
+        game_id = int(game_id_str.replace("Game ", ""))
+        draws = [Balls.from_string(draw) for draw in games_str.split(";")]
+        return cls(game_id, draws)
+
+    def max_balls(self) -> Balls:
+        """
+        >>> Game.from_line(TEST_INPUTS[0]).max_balls()
+        Balls(red=4, green=2, blue=6)
+        >>> Game.from_line(TEST_INPUTS[1]).max_balls()
+        Balls(red=1, green=3, blue=4)
+        >>> Game.from_line(TEST_INPUTS[2]).max_balls()
+        Balls(red=20, green=13, blue=6)
+        >>> Game.from_line(TEST_INPUTS[3]).max_balls()
+        Balls(red=14, green=3, blue=15)
+        >>> Game.from_line(TEST_INPUTS[4]).max_balls()
+        Balls(red=6, green=3, blue=2)
+        """
+        return Balls(
+            red=max(draw.red for draw in self.draws),
+            green=max(draw.green for draw in self.draws),
+            blue=max(draw.blue for draw in self.draws),
+        )
+
+    def is_valid(self) -> bool:
+        """
+        >>> [Game.from_line(line).is_valid() for line in TEST_INPUTS]
+        [True, True, False, False, True]
+        """
+        max_balls = self.max_balls()
+        limit_ball = Balls(red=12, green=13, blue=14)
+        is_valid_game = all(
+            getattr(max_balls, ball) <= getattr(limit_ball, ball)
+            for ball in ("red", "green", "blue")
+        )
+        return is_valid_game
 
 
 def process_lines(lines: list[str]) -> int:
@@ -74,9 +79,7 @@ def process_lines(lines: list[str]) -> int:
     8
     """
     return sum(
-        game_id
-        for game_id, is_valid_game in (game_is_valid(line) for line in lines)
-        if is_valid_game
+        game.game_id for line in lines if (game := Game.from_line(line)).is_valid()
     )
 
 
