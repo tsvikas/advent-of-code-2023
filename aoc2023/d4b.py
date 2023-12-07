@@ -5,7 +5,7 @@ from aoc2023.d4a import TEST_INPUTS, Card  # noqa: F401
 
 def get_cards_count(cards: list[Card]) -> list[int]:
     """
-    >>> get_cards_count(TEST_INPUTS)
+    >>> get_cards_count([Card.from_line(line) for line in TEST_INPUTS])
     [1, 2, 4, 8, 14, 1]
     """
     cards_count = [1] * len(cards)
