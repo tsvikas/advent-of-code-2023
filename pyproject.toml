@@ -92,6 +92,9 @@ target-version = "py311"
 mypy-init-return = true
 
 [tool.ruff.per-file-ignores]
+"aoc2023/*.py" = [
+    "PT",       # flake8-pytest-style
+]
 "tests/*.py" = [
     "PLR2004",  # PyLint-Refactor/magic-value-comparison
     "S101",  # flake8-bandit/assert
