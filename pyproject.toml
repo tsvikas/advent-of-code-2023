@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "aoc2023"}]
 
 [tool.poetry.dependencies]
-python = "~3.11"
+python = "~3.12"
 advent-of-code-data = "^2.0.1"
 more-itertools = "^10.1.0"
 networkx = "^3.2.1"
@@ -51,7 +51,7 @@ strict = true
 
 
 [tool.black]
-target-version = ["py311"]
+target-version = ["py312"]
 preview = false
 
 
@@ -92,7 +92,7 @@ ignore = [
     # "ERA001",   # eradicate/commented-out-code
     # "PLR091",   # PyLint-Refactor/too-many-*
 ]
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint.flake8-annotations]
 mypy-init-return = true
