@@ -1,6 +1,6 @@
 from aocd import data
 
-from aoc2023.d2a import TEST_INPUTS, Balls, Game  # noqa: F401
+from aoc2023.d2a import TEST_INPUTS, Game  # noqa: F401
 
 
 class GameWithPower(Game):
