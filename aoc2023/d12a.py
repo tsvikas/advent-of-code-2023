@@ -18,39 +18,45 @@ TEST_INPUTS_2 = [
 
 
 @functools.cache
-def count_arrangement(  # noqa: PLR0911
-    record: str, damaged: tuple[int, ...], *, start: str = ""
+def count_arrangements(  # noqa: PLR0911
+    hot_springs: str, group_sizes: tuple[int, ...], *, required_start: str = ""
 ) -> int:
     """
-    >>> [count_arrangement(*parse(line)) for line in TEST_INPUTS]
+    >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS]
     [1, 4, 1, 1, 4, 10]
-    >>> [count_arrangement(*parse(line)) for line in TEST_INPUTS_2]
+    >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS_2]
     [1, 506250]
     """
-    if not record:
-        return 1 if not damaged else 0
-    match record[0]:
+    if not hot_springs:
+        return 1 if not group_sizes else 0
+    match hot_springs[0]:
         case ".":
-            if start == "#":
+            if required_start == "#":
                 return 0
-            assert start in {"", "."}
-            return count_arrangement(record[1:], damaged, start="")
+            assert required_start in {"", "."}
+            return count_arrangements(hot_springs[1:], group_sizes, required_start="")
         case "#":
-            if start == ".":
+            if required_start == ".":
                 return 0
-            if not damaged:
+            if not group_sizes:
                 return 0
-            if damaged[0] == 0:
+            if group_sizes[0] == 0:
                 return 0
-            if damaged[0] == 1:
-                return count_arrangement(record[1:], damaged[1:], start=".")
-            assert damaged[0] > 1
-            new_damaged = (damaged[0] - 1, *damaged[1:])
-            return count_arrangement(record[1:], new_damaged, start="#")
+            if group_sizes[0] == 1:
+                return count_arrangements(
+                    hot_springs[1:], group_sizes[1:], required_start="."
+                )
+            assert group_sizes[0] > 1
+            new_group_sizes = (group_sizes[0] - 1, *group_sizes[1:])
+            return count_arrangements(
+                hot_springs[1:], new_group_sizes, required_start="#"
+            )
         case "?":
-            return count_arrangement(
-                "." + record[1:], damaged, start=start
-            ) + count_arrangement("#" + record[1:], damaged, start=start)
+            return count_arrangements(
+                "." + hot_springs[1:], group_sizes, required_start=required_start
+            ) + count_arrangements(
+                "#" + hot_springs[1:], group_sizes, required_start=required_start
+            )
     raise RuntimeError("unreachable")
 
 
@@ -68,7 +74,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     21
     """
-    return sum(count_arrangement(*parse(line)) for line in lines)
+    return sum(count_arrangements(*parse(line)) for line in lines)
 
 
 def main() -> int:

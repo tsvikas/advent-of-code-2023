@@ -1,6 +1,6 @@
 from aocd import data
 
-from aoc2023.d12a import TEST_INPUTS, count_arrangement, parse  # noqa: F401
+from aoc2023.d12a import TEST_INPUTS, count_arrangements, parse  # noqa: F401
 
 
 def duplicate(record: str, damaged: tuple[int, ...]) -> tuple[str, tuple[int, ...]]:
@@ -12,7 +12,7 @@ def process_lines(lines: list[str]) -> int:
     >>> process_lines(TEST_INPUTS)
     525152
     """
-    return sum(count_arrangement(*duplicate(*parse(line))) for line in lines)
+    return sum(count_arrangements(*duplicate(*parse(line))) for line in lines)
 
 
 def main() -> int:
