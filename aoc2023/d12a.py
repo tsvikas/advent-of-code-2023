@@ -32,7 +32,7 @@ def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
         required_start_dot: bool,  # noqa: FBT001
     ) -> int:
         assert not group_sizes or group_sizes[0] > 0
-        if len(hot_springs) == start:
+        if len(hot_springs) <= start:
             if group_sizes:
                 return 0
             return 1
