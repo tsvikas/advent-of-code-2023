@@ -18,7 +18,7 @@ TEST_INPUTS_2 = [
 
 
 @functools.cache
-def count_arrangements(  # noqa: PLR0911
+def count_arrangements(  # noqa: PLR0911, C901
     hot_springs: str, group_sizes: tuple[int, ...], *, required_start: str = ""
 ) -> int:
     """
@@ -35,7 +35,7 @@ def count_arrangements(  # noqa: PLR0911
         assert required_start != "#"
         return 1
     if sum(group_sizes) + len(group_sizes) - 1 > len(hot_springs):
-        # not required, but speeds up the program in a factor of 2
+        # not required, but speeds up the program
         return 0
     match hot_springs[0]:
         case ".":
@@ -51,11 +51,21 @@ def count_arrangements(  # noqa: PLR0911
                 return count_arrangements(
                     hot_springs[1:], group_sizes[1:], required_start="."
                 )
+            if "." in hot_springs[: group_sizes[0]]:
+                # not required, but speeds up the program
+                return 0
             new_group_sizes = (group_sizes[0] - 1, *group_sizes[1:])
             return count_arrangements(
                 hot_springs[1:], new_group_sizes, required_start="#"
             )
         case "?":
+            if required_start:
+                # not required, but speeds up the program
+                return count_arrangements(
+                    required_start + hot_springs[1:],
+                    group_sizes,
+                    required_start=required_start,
+                )
             return count_arrangements(
                 "." + hot_springs[1:], group_sizes, required_start=required_start
             ) + count_arrangements(
