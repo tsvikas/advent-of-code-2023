@@ -17,7 +17,9 @@ TEST_INPUTS_2 = [
 ]
 
 
-def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
+def count_arrangements(  # noqa: C901
+    hot_springs: str, group_sizes: tuple[int, ...]
+) -> int:
     """
     >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS]
     [1, 4, 1, 1, 4, 10]
@@ -32,7 +34,9 @@ def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
         required_start_dot: bool,  # noqa: FBT001
     ) -> int:
         assert not group_sizes or group_sizes[0] > 0
-        if len(hot_springs) <= start:
+        if len(hot_springs) < start:
+            return 0
+        if len(hot_springs) == start:
             if group_sizes:
                 return 0
             return 1
