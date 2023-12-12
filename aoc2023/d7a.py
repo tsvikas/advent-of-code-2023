@@ -38,7 +38,7 @@ class Hand:
         return [self.card_rank(card) for card in self.cards]
 
     @property
-    def hand_type(self) -> HandType:  # noqa: PLR0911
+    def hand_type(self) -> HandType:
         card_count = collections.Counter(self.cards)
         match card_count.most_common(2):
             case [(_, 5)]:

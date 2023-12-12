@@ -29,7 +29,7 @@ def count_arrangements(  # noqa: C901
     """
 
     @functools.cache
-    def count_arrangements_(  # noqa: PLR0911
+    def count_arrangements_(
         start: int,
         group_sizes: tuple[int, ...],
         required_start_dot: bool,  # noqa: FBT001

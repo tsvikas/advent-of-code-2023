@@ -10,7 +10,7 @@ class HandWithJoker(Hand):
         return {"T": 10, "J": 1, "Q": 12, "K": 13, "A": 14}.get(card) or int(card)
 
     @property
-    def hand_type(self) -> HandType:  # noqa: PLR0911
+    def hand_type(self) -> HandType:
         joker_count = self.cards.count("J")
         if joker_count == 5:  # noqa: PLR2004
             return HandType.FIVE_OF_A_KIND
