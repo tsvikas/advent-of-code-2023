@@ -17,9 +17,8 @@ TEST_INPUTS_2 = [
 ]
 
 
-@functools.cache
-def count_arrangements(  # noqa: PLR0911, C901
-    hot_springs: str, group_sizes: tuple[int, ...], *, required_start: str = ""
+def count_arrangements(  # noqa: C901
+    hot_springs: str, group_sizes: tuple[int, ...]
 ) -> int:
     """
     >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS]
@@ -27,51 +26,54 @@ def count_arrangements(  # noqa: PLR0911, C901
     >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS_2]
     [1, 506250]
     """
-    assert required_start in {"", ".", "#"}
-    assert not group_sizes or group_sizes[0] > 0
-    if not hot_springs:
-        if group_sizes:
+
+    @functools.cache
+    def count_arrangements_(  # noqa: C901, PLR0911
+        start: int, group_sizes: tuple[int, ...], required_start: str
+    ) -> int:
+        assert required_start in {"", ".", "#"}
+        assert not group_sizes or group_sizes[0] > 0
+        if len(hot_springs) == start:
+            if group_sizes:
+                return 0
+            assert required_start != "#"
+            return 1
+        if sum(group_sizes) + len(group_sizes) - 1 > len(hot_springs) - start:
+            # not required, but speeds up the program
             return 0
-        assert required_start != "#"
-        return 1
-    if sum(group_sizes) + len(group_sizes) - 1 > len(hot_springs):
-        # not required, but speeds up the program
-        return 0
-    match hot_springs[0]:
-        case ".":
-            if required_start == "#":
-                return 0
-            return count_arrangements(hot_springs[1:], group_sizes, required_start="")
-        case "#":
-            if required_start == ".":
-                return 0
-            if not group_sizes:
-                return 0
-            if group_sizes[0] == 1:
-                return count_arrangements(
-                    hot_springs[1:], group_sizes[1:], required_start="."
-                )
-            if "." in hot_springs[: group_sizes[0]]:
-                # not required, but speeds up the program
-                return 0
-            new_group_sizes = (group_sizes[0] - 1, *group_sizes[1:])
-            return count_arrangements(
-                hot_springs[1:], new_group_sizes, required_start="#"
-            )
-        case "?":
-            if required_start:
-                # not required, but speeds up the program
-                return count_arrangements(
-                    required_start + hot_springs[1:],
-                    group_sizes,
-                    required_start=required_start,
-                )
-            return count_arrangements(
-                "." + hot_springs[1:], group_sizes, required_start=required_start
-            ) + count_arrangements(
-                "#" + hot_springs[1:], group_sizes, required_start=required_start
-            )
-    raise RuntimeError("unreachable")
+        match hot_springs[start]:
+            case ".":
+                if required_start == "#":
+                    return 0
+                return count_arrangements_(start + 1, group_sizes, "")
+            case "#":
+                if required_start == ".":
+                    return 0
+                if not group_sizes:
+                    return 0
+                if group_sizes[0] == 1:
+                    return count_arrangements_(start + 1, group_sizes[1:], ".")
+                if "." in hot_springs[start : start + group_sizes[0]]:
+                    # not required, but speeds up the program
+                    return 0
+                new_group_sizes = (group_sizes[0] - 1, *group_sizes[1:])
+                return count_arrangements_(start + 1, new_group_sizes, "#")
+            case "?":
+                count = 0
+                if required_start in {".", ""}:
+                    count += count_arrangements_(start + 1, group_sizes, "")
+                if (
+                    required_start in {"#", ""}
+                    and group_sizes
+                    and "." not in hot_springs[start : start + group_sizes[0]]
+                ):
+                    count += count_arrangements_(
+                        start + group_sizes[0], group_sizes[1:], "."
+                    )
+                return count
+        raise RuntimeError("unreachable")
+
+    return count_arrangements_(0, group_sizes, "")
 
 
 def parse(line: str) -> tuple[str, tuple[int, ...]]:
