@@ -17,9 +17,7 @@ TEST_INPUTS_2 = [
 ]
 
 
-def count_arrangements(  # noqa: C901
-    hot_springs: str, group_sizes: tuple[int, ...]
-) -> int:
+def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
     """
     >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS]
     [1, 4, 1, 1, 4, 10]
@@ -28,48 +26,52 @@ def count_arrangements(  # noqa: C901
     """
 
     @functools.cache
-    def count_arrangements_(  # noqa: C901, PLR0911
-        start: int, group_sizes: tuple[int, ...], required_start: str
+    def count_arrangements_(  # noqa: PLR0911
+        start: int,
+        group_sizes: tuple[int, ...],
+        required_start_dot: bool,  # noqa: FBT001
     ) -> int:
-        assert required_start in {"", ".", "#"}
         assert not group_sizes or group_sizes[0] > 0
         if len(hot_springs) == start:
             if group_sizes:
                 return 0
-            assert required_start != "#"
             return 1
         if sum(group_sizes) + len(group_sizes) - 1 > len(hot_springs) - start:
             # not required, but speeds up the program
             return 0
         match hot_springs[start]:
             case ".":
-                if required_start == "#":
-                    return 0
-                return count_arrangements_(start + 1, group_sizes, "")
+                return count_arrangements_(
+                    start + 1, group_sizes, False  # noqa: FBT003
+                )
             case "#":
-                if required_start == ".":
+                if required_start_dot:
                     return 0
                 if not group_sizes:
                     return 0
                 if "." in hot_springs[start + 1 : start + group_sizes[0]]:
                     return 0
-                return count_arrangements_(start + group_sizes[0], group_sizes[1:], ".")
+                return count_arrangements_(
+                    start + group_sizes[0], group_sizes[1:], True  # noqa: FBT003
+                )
             case "?":
-                count = 0
-                if required_start in {".", ""}:
-                    count += count_arrangements_(start + 1, group_sizes, "")
+                # start with dot
+                count = count_arrangements_(
+                    start + 1, group_sizes, False  # noqa: FBT003
+                )
+                # or start with hash
                 if (
-                    required_start in {"#", ""}
+                    not required_start_dot
                     and group_sizes
                     and "." not in hot_springs[start : start + group_sizes[0]]
                 ):
                     count += count_arrangements_(
-                        start + group_sizes[0], group_sizes[1:], "."
+                        start + group_sizes[0], group_sizes[1:], True  # noqa: FBT003
                     )
                 return count
         raise RuntimeError("unreachable")
 
-    return count_arrangements_(0, group_sizes, "")
+    return count_arrangements_(0, group_sizes, False)  # noqa: FBT003
 
 
 def parse(line: str) -> tuple[str, tuple[int, ...]]:
