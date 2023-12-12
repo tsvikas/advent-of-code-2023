@@ -44,13 +44,10 @@ def count_arrangements(  # noqa: PLR0911
                 return 0
             if not group_sizes:
                 return 0
-            if group_sizes[0] == 0:
-                return 0
             if group_sizes[0] == 1:
                 return count_arrangements(
                     hot_springs[1:], group_sizes[1:], required_start="."
                 )
-            assert group_sizes[0] > 1
             new_group_sizes = (group_sizes[0] - 1, *group_sizes[1:])
             return count_arrangements(
                 hot_springs[1:], new_group_sizes, required_start="#"
