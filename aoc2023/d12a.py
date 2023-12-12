@@ -17,6 +17,7 @@ TEST_INPUTS_2 = [
 ]
 
 
+# ruff: noqa: FBT003
 def count_arrangements(  # noqa: C901
     hot_springs: str, group_sizes: tuple[int, ...]
 ) -> int:
@@ -45,9 +46,7 @@ def count_arrangements(  # noqa: C901
             return 0
         match hot_springs[start]:
             case ".":
-                return count_arrangements_(
-                    start + 1, group_sizes, False  # noqa: FBT003
-                )
+                return count_arrangements_(start + 1, group_sizes, False)
             case "#":
                 if required_start_dot:
                     return 0
@@ -56,13 +55,11 @@ def count_arrangements(  # noqa: C901
                 if "." in hot_springs[start + 1 : start + group_sizes[0]]:
                     return 0
                 return count_arrangements_(
-                    start + group_sizes[0], group_sizes[1:], True  # noqa: FBT003
+                    start + group_sizes[0], group_sizes[1:], True
                 )
             case "?":
                 # start with dot
-                count = count_arrangements_(
-                    start + 1, group_sizes, False  # noqa: FBT003
-                )
+                count = count_arrangements_(start + 1, group_sizes, False)
                 # or start with hash
                 if (
                     not required_start_dot
@@ -70,12 +67,12 @@ def count_arrangements(  # noqa: C901
                     and "." not in hot_springs[start : start + group_sizes[0]]
                 ):
                     count += count_arrangements_(
-                        start + group_sizes[0], group_sizes[1:], True  # noqa: FBT003
+                        start + group_sizes[0], group_sizes[1:], True
                     )
                 return count
         raise RuntimeError("unreachable")
 
-    return count_arrangements_(0, group_sizes, False)  # noqa: FBT003
+    return count_arrangements_(0, group_sizes, False)
 
 
 def parse(line: str) -> tuple[str, tuple[int, ...]]:
