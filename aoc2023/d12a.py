@@ -27,13 +27,17 @@ def count_arrangements(  # noqa: PLR0911
     >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS_2]
     [1, 506250]
     """
+    assert required_start in {"", ".", "#"}
+    assert not group_sizes or group_sizes[0] > 0
     if not hot_springs:
-        return 1 if not group_sizes else 0
+        if group_sizes:
+            return 0
+        assert required_start != "#"
+        return 1
     match hot_springs[0]:
         case ".":
             if required_start == "#":
                 return 0
-            assert required_start in {"", "."}
             return count_arrangements(hot_springs[1:], group_sizes, required_start="")
         case "#":
             if required_start == ".":
