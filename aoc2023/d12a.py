@@ -34,6 +34,9 @@ def count_arrangements(  # noqa: PLR0911
             return 0
         assert required_start != "#"
         return 1
+    if sum(group_sizes) + len(group_sizes) - 1 > len(hot_springs):
+        # not required, but speeds up the program in a factor of 2
+        return 0
     match hot_springs[0]:
         case ".":
             if required_start == "#":
