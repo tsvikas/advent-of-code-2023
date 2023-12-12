@@ -29,48 +29,52 @@ def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
     @functools.cache
     def count_arrangements_(
         h_start: int,
-        group_sizes: tuple[int, ...],
+        g_start: int,
         required_start_dot: bool,  # noqa: FBT001
     ) -> int:
-        assert not group_sizes or group_sizes[0] > 0
+        assert g_start <= len(group_sizes)
+        assert g_start == len(group_sizes) or group_sizes[g_start] > 0
         if len(hot_springs) < h_start:
             return 0
         if len(hot_springs) == h_start:
-            if group_sizes:
+            if g_start < len(group_sizes):
                 return 0
             return 1
-        if sum(group_sizes) + len(group_sizes) - 1 > len(hot_springs) - h_start:
+        if (
+            sum(group_sizes[g_start:]) + len(group_sizes) - g_start - 1
+            > len(hot_springs) - h_start
+        ):
             # not required, but speeds up the program
             return 0
         match hot_springs[h_start]:
             case ".":
-                return count_arrangements_(h_start + 1, group_sizes, False)
+                return count_arrangements_(h_start + 1, g_start, False)
             case "#":
                 if required_start_dot:
                     return 0
-                if not group_sizes:
+                if not g_start < len(group_sizes):
                     return 0
-                if "." in hot_springs[h_start + 1 : h_start + group_sizes[0]]:
+                if "." in hot_springs[h_start + 1 : h_start + group_sizes[g_start]]:
                     return 0
                 return count_arrangements_(
-                    h_start + group_sizes[0], group_sizes[1:], True
+                    h_start + group_sizes[g_start], g_start + 1, True
                 )
             case "?":
                 # start with dot
-                count = count_arrangements_(h_start + 1, group_sizes, False)
+                count = count_arrangements_(h_start + 1, g_start, False)
                 # or start with hash
                 if (
                     not required_start_dot
-                    and group_sizes
-                    and "." not in hot_springs[h_start : h_start + group_sizes[0]]
+                    and g_start < len(group_sizes)
+                    and "." not in hot_springs[h_start : h_start + group_sizes[g_start]]
                 ):
                     count += count_arrangements_(
-                        h_start + group_sizes[0], group_sizes[1:], True
+                        h_start + group_sizes[g_start], g_start + 1, True
                     )
                 return count
         raise RuntimeError("unreachable")
 
-    return count_arrangements_(0, group_sizes, False)
+    return count_arrangements_(0, 0, False)
 
 
 def parse(line: str) -> tuple[str, tuple[int, ...]]:
