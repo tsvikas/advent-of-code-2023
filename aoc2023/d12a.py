@@ -18,9 +18,7 @@ TEST_INPUTS_2 = [
 
 
 # ruff: noqa: FBT003
-def count_arrangements(  # noqa: C901
-    hot_springs: str, group_sizes: tuple[int, ...]
-) -> int:
+def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
     """
     >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS]
     [1, 4, 1, 1, 4, 10]
