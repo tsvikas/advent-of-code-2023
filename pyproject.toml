@@ -83,8 +83,8 @@ ignore = [
     "TRY003",   # tryceratops/raise-vanilla-args
     "S101",     # flake8-bandit/assert
     "PLR0911",  # PyLint-Refactor/too-many-return-statements
+    "C901",     # mccabe/complex-structure
     # ban something useful for a good reason
-    # "C901",     # mccabe/complex-structure
     # "FBT001",   # flake8-boolean-trap/boolean-type-hint-positional-argument
     # "FBT002",   # flake8-boolean-trap/boolean-default-value-positional-argument
     # "DTZ",      # flake8-datetimez
