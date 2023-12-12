@@ -28,9 +28,7 @@ def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
 
     @functools.cache
     def count_arrangements_(
-        h_start: int,
-        g_start: int,
-        required_start_dot: bool,  # noqa: FBT001
+        h_start: int, g_start: int, required_start_dot: bool  # noqa: FBT001
     ) -> int:
         assert g_start <= len(group_sizes)
         assert g_start == len(group_sizes) or group_sizes[g_start] > 0

@@ -78,10 +78,7 @@ def pass_ranges_through_map_range(
             <= range_map.source_range_end
         ):
             passing.append(
-                SrcRange(
-                    src_range.start + range_map.map_change,
-                    src_range.length,
-                )
+                SrcRange(src_range.start + range_map.map_change, src_range.length)
             )
         else:
             # possible orders:
@@ -101,8 +98,7 @@ def pass_ranges_through_map_range(
             if middle_start < middle_end:
                 passing.append(
                     SrcRange(
-                        middle_start + range_map.map_change,
-                        middle_end - middle_start,
+                        middle_start + range_map.map_change, middle_end - middle_start
                     )
                 )
     return passing, remaining

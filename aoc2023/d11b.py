@@ -3,10 +3,7 @@ from collections.abc import Generator, Iterable
 
 from aocd import data
 
-from aoc2023.d11a import (
-    TEST_INPUT,  # noqa: F401
-    extract_galaxies,
-)
+from aoc2023.d11a import TEST_INPUT, extract_galaxies  # noqa: F401
 
 
 def find_empty_rows_and_cols(grid: list[str]) -> tuple[list[int], list[int]]:
