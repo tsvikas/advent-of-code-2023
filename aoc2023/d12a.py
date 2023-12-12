@@ -51,13 +51,9 @@ def count_arrangements(  # noqa: C901
                     return 0
                 if not group_sizes:
                     return 0
-                if group_sizes[0] == 1:
-                    return count_arrangements_(start + 1, group_sizes[1:], ".")
-                if "." in hot_springs[start : start + group_sizes[0]]:
-                    # not required, but speeds up the program
+                if "." in hot_springs[start + 1 : start + group_sizes[0]]:
                     return 0
-                new_group_sizes = (group_sizes[0] - 1, *group_sizes[1:])
-                return count_arrangements_(start + 1, new_group_sizes, "#")
+                return count_arrangements_(start + group_sizes[0], group_sizes[1:], ".")
             case "?":
                 count = 0
                 if required_start in {".", ""}:
