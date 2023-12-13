@@ -29,12 +29,10 @@ def transpose(mirrors: list[str]) -> list[str]:
     return ["".join(row) for row in zip(*mirrors, strict=True)]
 
 
-def find_mirror_row(mirrors: list[str]) -> list[int]:
+def find_mirror_row_above(mirrors: list[str]) -> list[int]:
     """
-    >>> find_mirror_row(["#.#", ".#.", ".#.", "#.#", "...", "..#"])
+    >>> find_mirror_row_above(["#.#", ".#.", ".#.", "#.#", "...", "..#"])
     [2]
-    >>> find_mirror_row(["...", "..#", "#.#", ".#.", ".#.", ".#.", ".#.", "#.#"])
-    [5]
     """
     pattern_lines = collections.defaultdict(list)
     for i, line in enumerate(mirrors):
@@ -52,19 +50,13 @@ def find_mirror_row(mirrors: list[str]) -> list[int]:
             for i in range(size_of_reflection)
         ):
             total_rows_above_reflections.append(size_of_reflection)
-    # reflection from bottom
-    for possible_row in pattern_lines[mirrors[-1]]:
-        if possible_row == len(mirrors) - 1:
-            continue
-        size_of_reflection, mod = divmod(len(mirrors) - possible_row, 2)
-        if mod != 0:
-            continue
-        if all(
-            possible_row + i in pattern_lines[mirrors[len(mirrors) - 1 - i]]
-            for i in range(size_of_reflection)
-        ):
-            total_rows_above_reflections.append(len(mirrors) - size_of_reflection)
     return total_rows_above_reflections
+
+
+def find_mirror_row(mirrors: list[str]) -> list[int]:
+    return find_mirror_row_above(mirrors) + [
+        len(mirrors) - r for r in find_mirror_row_above(mirrors[::-1])
+    ]
 
 
 def analyze_map(mirrors: list[str]) -> int:
