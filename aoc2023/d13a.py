@@ -59,6 +59,18 @@ def find_mirror_row(mirrors: list[str]) -> list[int]:
     ]
 
 
+def print_mirrors(
+    mirrors: list[str], mark_rows: list[int], mark_cols: list[int]
+) -> None:
+    for row, line in enumerate(mirrors):
+        print(line, "v" if row + 1 in mark_rows else "^" if row in mark_rows else "")
+    printed_cols = 0
+    for col in mark_cols:
+        print(" " * (col - printed_cols - 1) + "><", end="")
+        printed_cols += col
+    print()
+
+
 def analyze_map(mirrors: list[str]) -> int:
     """
     >>> [analyze_map(mirrors) for mirrors in split_maps(TEST_INPUTS)]
@@ -70,15 +82,7 @@ def analyze_map(mirrors: list[str]) -> int:
     if verbose:
         print("Mirror row:", mirror_row)
         print("Mirror col:", mirror_col)
-        for row, line in enumerate(mirrors):
-            print(
-                line, "v" if row + 1 in mirror_row else "^" if row in mirror_row else ""
-            )
-        cumcol = 1
-        for col in mirror_col:
-            print(" " * (col - cumcol) + "><", end="")
-            cumcol += col
-        print()
+        print_mirrors(mirrors, mirror_row, mirror_col)
         print()
     mirror_row = [100 * v for v in mirror_row]
     return sum(mirror_row) + sum(mirror_col)
