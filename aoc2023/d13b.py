@@ -2,7 +2,7 @@ import collections
 
 from aocd import data
 
-from aoc2023.d13a import TEST_INPUTS, split_maps, transpose  # noqa: F401
+from aoc2023.d13a import TEST_INPUTS, print_mirrors, split_maps, transpose  # noqa: F401
 
 
 def find_mirror_row_above(mirrors: list[str]) -> list[int]:
@@ -62,21 +62,12 @@ def analyze_map(mirrors: list[str]) -> int:
     [300, 100]
     """
     mirror_row = find_mirror_row(mirrors)
-    map_t = transpose(mirrors)
-    mirror_col = find_mirror_row(map_t)
+    mirror_col = find_mirror_row(transpose(mirrors))
     verbose = len(mirror_row) + len(mirror_col) > 1
     if verbose:
         print("Mirror row:", mirror_row)
         print("Mirror col:", mirror_col)
-        for row, line in enumerate(mirrors):
-            print(
-                line, "v" if row + 1 in mirror_row else "^" if row in mirror_row else ""
-            )
-        cumcol = 1
-        for col in mirror_col:
-            print(" " * (col - cumcol) + "><", end="")
-            cumcol += col
-        print()
+        print_mirrors(mirrors, mirror_row, mirror_col)
         print()
     mirror_row = [100 * v for v in mirror_row]
     return sum(mirror_row) + sum(mirror_col)
