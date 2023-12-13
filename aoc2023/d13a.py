@@ -89,8 +89,8 @@ def analyze_map(mirrors: list[str]) -> int:
 
 
 def split_maps(lines: str) -> list[list[str]]:
-    r"""
-    >>> split_maps("abc\ndef\n\nghi\njkl")
+    """
+    >>> split_maps("abc\\ndef\\n\\nghi\\njkl")
     [['abc', 'def'], ['ghi', 'jkl']]
     """
     return [s.splitlines() for s in lines.split("\n\n")]
