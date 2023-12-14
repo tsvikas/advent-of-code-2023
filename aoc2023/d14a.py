@@ -2,8 +2,6 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Self
 
-import numpy as np
-import numpy.typing as npt
 from aocd import data
 
 TEST_INPUT = """\
@@ -54,13 +52,13 @@ def tilt_line(line: Iterable[str]) -> list[str]:
 
 @dataclass
 class RocksMap:
-    array: npt.NDArray[np.string_]
+    array: list[str]
 
     def __hash__(self) -> int:
-        return hash(self.array.tobytes())
+        return hash("".join(self.array))
 
     def __str__(self) -> str:
-        return "\n".join("".join(row) for row in self.array)
+        return "\n".join(self.array)
 
     def transpose(self) -> Self:
         """
@@ -77,10 +75,24 @@ class RocksMap:
         ....#.....
         .#.O.#O...
         """
-        return self.__class__(self.array.T)
+        return self.__class__(["".join(line) for line in zip(*self.array, strict=True)])
 
     def tilt_west(self) -> Self:
-        return self.__class__(np.array([tilt_line(line) for line in self.array]))
+        """
+        >>> rocks = RocksMap.from_lines(TEST_INPUT.splitlines())
+        >>> print(rocks.tilt_west())
+        O....#....
+        OOO.#....#
+        .....##...
+        OO.#OO....
+        OO......#.
+        O.#O...#.#
+        O....#OO..
+        O.........
+        #....###..
+        #OO..#....
+        """
+        return self.__class__(["".join(tilt_line(line)) for line in self.array])
 
     def tilt_north(self) -> Self:
         """
@@ -100,8 +112,22 @@ class RocksMap:
         return self.transpose().tilt_west().transpose()
 
     def tilt_east(self) -> Self:
+        """
+        >>> rocks = RocksMap.from_lines(TEST_INPUT.splitlines())
+        >>> print("|", rocks.tilt_east())
+        | ....O#....
+        .OOO#....#
+        .....##...
+        .OO#....OO
+        ......OO#.
+        .O#...O#.#
+        ....O#..OO
+        .........O
+        #....###..
+        #..OO#....
+        """
         return self.__class__(
-            np.array([tilt_line(line[::-1])[::-1] for line in self.array])
+            ["".join(tilt_line(line[::-1])[::-1]) for line in self.array]
         )
 
     def tilt_south(self) -> Self:
@@ -109,7 +135,7 @@ class RocksMap:
 
     @classmethod
     def from_lines(cls, lines: list[str]) -> Self:
-        return cls(np.array([list(line) for line in lines]))
+        return cls(lines)
 
     def total_load_north(self) -> int:
         """
@@ -119,7 +145,7 @@ class RocksMap:
         """
         return sum(
             len(column) - row
-            for column in self.array.transpose()
+            for column in self.transpose().array
             for row, char in enumerate(column)
             if char == "O"
         )
