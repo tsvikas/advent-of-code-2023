@@ -56,6 +56,9 @@ def tilt_line(line: Iterable[str]) -> list[str]:
 class RocksMap:
     array: npt.NDArray[np.string_]
 
+    def __hash__(self) -> int:
+        return hash(self.array.tobytes())
+
     def __str__(self) -> str:
         return "\n".join("".join(row) for row in self.array)
 

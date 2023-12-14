@@ -43,11 +43,11 @@ def cycle(rocks: RocksMap, n: int) -> RocksMap:
     #...O###.O
     #.OOO#...O
     """
-    cache = {rocks.array.tobytes(): 0}
+    cache = {hash(rocks): 0}
     cycle_length = i = None
     for i in range(1, n + 1):
         rocks = rocks.tilt_north().tilt_west().tilt_south().tilt_east()
-        rocks_b = rocks.array.tobytes()
+        rocks_b = hash(rocks)
         if rocks_b in cache:
             cycle_start = cache[rocks_b]
             cycle_length = i - cycle_start
