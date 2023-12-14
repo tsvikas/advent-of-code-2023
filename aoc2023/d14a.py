@@ -1,4 +1,3 @@
-from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Self
 
@@ -18,15 +17,15 @@ O.#..O.#.#
 """
 
 
-def tilt_line(line: Iterable[str]) -> list[str]:
+def tilt_line(line: str) -> str:
     """
-    >>> ''.join(tilt_line('O....#....'))
+    >>> tilt_line('O....#....')
     'O....#....'
-    >>> ''.join(tilt_line('O.OO#....#'))
+    >>> tilt_line('O.OO#....#')
     'OOO.#....#'
-    >>> ''.join(tilt_line('.....##...'))
+    >>> tilt_line('.....##...')
     '.....##...'
-    >>> ''.join(tilt_line('OO.#O....O'))
+    >>> tilt_line('OO.#O....O')
     'OO.#OO....'
     """
     new_line: list[str] = []
@@ -47,7 +46,7 @@ def tilt_line(line: Iterable[str]) -> list[str]:
             case _:
                 raise ValueError(f"illegal character {c!r}")
     new_line += ["O"] * new_section_rocks + ["."] * new_section_spaces
-    return new_line
+    return "".join(new_line)
 
 
 @dataclass
@@ -92,7 +91,7 @@ class RocksMap:
         #....###..
         #OO..#....
         """
-        return self.__class__(["".join(tilt_line(line)) for line in self.array])
+        return self.__class__([tilt_line(line) for line in self.array])
 
     def tilt_north(self) -> Self:
         """
@@ -126,9 +125,7 @@ class RocksMap:
         #....###..
         #..OO#....
         """
-        return self.__class__(
-            ["".join(tilt_line(line[::-1])[::-1]) for line in self.array]
-        )
+        return self.__class__([tilt_line(line[::-1])[::-1] for line in self.array])
 
     def tilt_south(self) -> Self:
         return self.transpose().tilt_east().transpose()
