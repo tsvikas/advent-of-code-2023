@@ -1,7 +1,7 @@
 # can be used in 3, 10, 11, ...
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Optional, Self, TypeVar
+from typing import Any, Optional, Self
 
 import numpy as np
 import numpy.typing as npt
@@ -9,7 +9,7 @@ import numpy.typing as npt
 PointTuple = tuple[int, int]
 
 
-@dataclass
+@dataclass(frozen=True)
 class Point:
     y: int
     x: int
@@ -32,8 +32,8 @@ class Point:
     def manhattan_distance(self, other: Self) -> int:
         return abs(self.y - other.y) + abs(self.x - other.x)
 
-    def __str__(self) -> str:
-        return f"({self.y}, {self.x})"
+    def __repr__(self) -> str:
+        return f"P({self.y}, {self.x})"
 
     def up(self) -> Self:
         return self + Point(-1, 0)
@@ -59,37 +59,41 @@ class Point:
         return top, bottom, left, right
 
 
-T = TypeVar("T", bound=np.generic)
-U = TypeVar("U", bound=np.generic)
-V = TypeVar("V", bound=np.generic)
-
-
 class Grid:
-    def __init__(self, data: npt.NDArray[T]):
+    def __init__(self, data: npt.NDArray[Any]):
         self.data = data
+
+    def in_bounds(self, p: Point) -> bool:
+        return 0 <= p.y < self.data.shape[0] and 0 <= p.x < self.data.shape[1]
+
+    def __getitem__(self, item: Point | PointTuple) -> Any:
+        if isinstance(item, Point):
+            item = item.to_tuple()
+        value: Any = self.data[item]
+        return value
 
     @classmethod
     def from_string(cls, data: str) -> Self:
         return cls(np.array([list(line) for line in data.splitlines()]))
 
-    def apply(self, f: Callable[[T], U]) -> Self:
+    def apply(self, f: Callable[[Any], Any]) -> Self:
         vf = np.vectorize(f)
         return type(self)(vf(self.data))
 
-    def map_values(self, m: dict[T, U], default: U | None = None) -> Self:
+    def map_values(self, m: dict[Any, Any], default: Any | None = None) -> Self:
         if default is None:
             return self.apply(m.__getitem__)
         return self.apply(lambda x: m.get(x, default))
 
-    def map_some_values(self, m: dict[T, T]) -> Self:
+    def map_some_values(self, m: dict[Any, Any]) -> Self:
         return self.apply(lambda x: m.get(x, x))
 
-    def where(self, f: Callable[[T], np.bool_], other: T | Self) -> Self:
+    def where(self, f: Callable[[Any], np.bool_], other: Any | Self) -> Self:
         other_data = other.data if isinstance(other, Grid) else other
         cond: npt.NDArray[np.bool_] = self.apply(f).data
         return type(self)(np.where(cond, self.data, other_data))
 
-    def find(self, value: T) -> list[Point]:
+    def find(self, value: Any) -> list[Point]:
         return [Point(*yx) for yx in np.argwhere(self.data == value)]
 
     def __str__(self) -> str:
@@ -98,7 +102,7 @@ class Grid:
     def __repr__(self) -> str:
         return f"Grid({self.data!r})"
 
-    def mark(self, yx: Point | PointTuple, value: T) -> Self:
+    def mark(self, yx: Point | PointTuple, value: Any) -> Self:
         y, x = yx.to_tuple() if isinstance(yx, Point) else yx
         data = self.data.copy()
         data[y, x] = value
@@ -109,7 +113,7 @@ class Grid:
 
     def neighbours(
         self, yx: Point | PointTuple, *, include_diagonals: bool = True
-    ) -> list[T]:
+    ) -> list[Any]:
         if include_diagonals:
             if not isinstance(yx, Point):
                 yx = Point(*yx)
