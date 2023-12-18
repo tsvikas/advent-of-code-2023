@@ -29,7 +29,7 @@ class HeatGrid:
     def from_line(cls, line: str) -> Self:
         return cls(line.splitlines())
 
-    def to_graph(self) -> nx.DiGraph:
+    def to_graph(self, min_line: int = 1, max_line: int = 3) -> nx.DiGraph:
         # create a graph:
         graph = nx.DiGraph()
         # add nodes:
@@ -38,28 +38,38 @@ class HeatGrid:
             for col, char in enumerate(line):
                 for sign in [-1, 1]:
                     # from above/below, after change direction
-                    for distance in [1, 2, 3, -1, -2, -3]:
+                    for distance in range(min_line, max_line + 1):
                         graph.add_edge(
                             (row - sign, col, 0, distance),
                             (row, col, sign, 0),
                             weight=int(char),
                         )
+                        graph.add_edge(
+                            (row - sign, col, 0, -distance),
+                            (row, col, sign, 0),
+                            weight=int(char),
+                        )
                     # from above/below, after a straight line
-                    for distance in [0, 1, 2]:
+                    for distance in range(max_line):
                         graph.add_edge(
                             (row - sign, col, sign * distance, 0),
                             (row, col, sign * (distance + 1), 0),
                             weight=int(char),
                         )
                     # from left/right, after change direction
-                    for distance in [1, 2, 3, -1, -2, -3]:
+                    for distance in range(min_line, max_line + 1):
                         graph.add_edge(
                             (row, col - sign, distance, 0),
                             (row, col, 0, sign),
                             weight=int(char),
                         )
+                        graph.add_edge(
+                            (row, col - sign, -distance, 0),
+                            (row, col, 0, sign),
+                            weight=int(char),
+                        )
                     # from left/right, after a straight line
-                    for distance in [0, 1, 2]:
+                    for distance in range(max_line):
                         graph.add_edge(
                             (row, col - sign, 0, sign * distance),
                             (row, col, 0, sign * (distance + 1)),
@@ -67,13 +77,15 @@ class HeatGrid:
                         )
         y_end = len(self.data) - 1
         x_end = len(self.data[0]) - 1
-        for distance in [1, 2, 3, 0, -1, -2, -3]:
+        for distance in range(min_line, max_line + 1):
             graph.add_edge((y_end, x_end, 0, distance), "end", weight=0)
+            graph.add_edge((y_end, x_end, 0, -distance), "end", weight=0)
             graph.add_edge((y_end, x_end, distance, 0), "end", weight=0)
+            graph.add_edge((y_end, x_end, -distance, 0), "end", weight=0)
         return graph
 
-    def least_heat_loss(self) -> int:
-        graph = self.to_graph()
+    def least_heat_loss(self, min_line: int = 1, max_line: int = 3) -> int:
+        graph = self.to_graph(min_line, max_line)
         shortest_path_length: int = nx.shortest_path_length(
             graph,
             "start",
