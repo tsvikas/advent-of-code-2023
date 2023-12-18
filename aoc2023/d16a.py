@@ -21,28 +21,32 @@ TEST_INPUT = r"""
 class MirrorGrid(Grid):
     def beam(
         self, start: Point = Point(0, 0), direction: Point = Point(0, 1)
-    ) -> set[Point]:
+    ) -> set[tuple[Point, Point]]:
         """
         >>> grid = MirrorGrid.from_string(TEST_INPUT)
         >>> beam_points = grid.beam(Point(0, 0), Point(0, 1))
-        >>> Point(0, 0) in beam_points
+        >>> (Point(0, 0), Point(0, 1)) in beam_points
         True
-        >>> Point(1, 1) in beam_points
+        >>> (Point(1, 1), Point(1, 0)) in beam_points
         True
-        >>> Point(5, 5) in beam_points
+        >>> (Point(5, 5), Point(1, 0)) in beam_points
         True
-        >>> Point(6, 6) in beam_points
+        >>> (Point(6, 6), Point(0, 1)) in beam_points
+        True
+        >>> (Point(6, 6), Point(0, -1)) in beam_points
+        True
+        >>> (Point(7, 7), Point(-1, 0)) in beam_points
         True
         """
         positions = [(start, direction)]
-        visited_positions = set()
+        visited_positions_and_dirs = set()
         while positions:
             position, direction = positions.pop()
             if not self.in_bounds(position):
                 continue
-            if (position, direction) in visited_positions:
+            if (position, direction) in visited_positions_and_dirs:
                 continue
-            visited_positions.add((position, direction))
+            visited_positions_and_dirs.add((position, direction))
             match self[position]:
                 case ".":
                     new_directions = [direction]
@@ -68,7 +72,7 @@ class MirrorGrid(Grid):
                     for new_direction in new_directions
                 ]
             )
-        return {p for p, d in visited_positions}
+        return visited_positions_and_dirs
 
     def beam_energy(
         self, start: Point = Point(0, 0), direction: Point = Point(0, 1)
@@ -80,7 +84,9 @@ class MirrorGrid(Grid):
         >>> grid.beam_energy(Point(0, 3), Point(1, 0))
         51
         """
-        return len(self.beam(start, direction))
+        visited_positions_and_dirs = self.beam(start, direction)
+        visited_positions = {p for p, d in visited_positions_and_dirs}
+        return len(visited_positions)
 
 
 def process_lines(lines: str) -> int:
