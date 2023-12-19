@@ -3,13 +3,13 @@ from typing import Self
 
 from aocd import data
 
-TEST_INPUTS = [
-    "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
-    "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
-    "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
-    "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
-    "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
-]
+TEST_INPUT = """\
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+"""
 
 
 @dataclass(frozen=True)
@@ -42,15 +42,12 @@ class Game:
 
     def max_balls(self) -> Balls:
         """
-        >>> Game.from_line(TEST_INPUTS[0]).max_balls()
+        >>> games = [Game.from_line(line) for line in TEST_INPUT.splitlines()]
+        >>> print('\\n'.join(str(game.max_balls()) for game in games))
         Balls(red=4, green=2, blue=6)
-        >>> Game.from_line(TEST_INPUTS[1]).max_balls()
         Balls(red=1, green=3, blue=4)
-        >>> Game.from_line(TEST_INPUTS[2]).max_balls()
         Balls(red=20, green=13, blue=6)
-        >>> Game.from_line(TEST_INPUTS[3]).max_balls()
         Balls(red=14, green=3, blue=15)
-        >>> Game.from_line(TEST_INPUTS[4]).max_balls()
         Balls(red=6, green=3, blue=2)
         """
         return Balls(
@@ -61,7 +58,7 @@ class Game:
 
     def is_valid(self) -> bool:
         """
-        >>> [Game.from_line(line).is_valid() for line in TEST_INPUTS]
+        >>> [Game.from_line(line).is_valid() for line in TEST_INPUT.splitlines()]
         [True, True, False, False, True]
         """
         max_balls = self.max_balls()
@@ -73,18 +70,20 @@ class Game:
         return is_valid_game
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUTS)
+    >>> process_lines(TEST_INPUT)
     8
     """
     return sum(
-        game.game_id for line in lines if (game := Game.from_line(line)).is_valid()
+        game.game_id
+        for line in lines.splitlines()
+        if (game := Game.from_line(line)).is_valid()
     )
 
 
 def main() -> int:
-    return process_lines(data.splitlines())
+    return process_lines(data)
 
 
 if __name__ == "__main__":

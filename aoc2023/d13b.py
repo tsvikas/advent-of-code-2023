@@ -2,7 +2,7 @@ import collections
 
 from aocd import data
 
-from aoc2023.d13a import TEST_INPUTS, print_mirrors, split_maps, transpose  # noqa: F401
+from aoc2023.d13a import TEST_INPUT, print_mirrors, split_maps, transpose  # noqa: F401
 
 
 def find_mirror_row_above(mirrors: list[str]) -> list[int]:
@@ -58,7 +58,7 @@ def find_mirror_row(mirrors: list[str]) -> list[int]:
 
 def analyze_map(mirrors: list[str]) -> int:
     """
-    >>> [analyze_map(mirrors) for mirrors in split_maps(TEST_INPUTS)]
+    >>> [analyze_map(mirrors) for mirrors in split_maps(TEST_INPUT)]
     [300, 100]
     """
     mirror_row = find_mirror_row(mirrors)
@@ -75,7 +75,7 @@ def analyze_map(mirrors: list[str]) -> int:
 
 def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUTS)
+    >>> process_lines(TEST_INPUT)
     400
     """
     return sum(analyze_map(mirrors) for mirrors in split_maps(lines))

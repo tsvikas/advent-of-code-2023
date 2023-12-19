@@ -2,7 +2,7 @@ import collections
 
 from aocd import data
 
-TEST_INPUTS = """\
+TEST_INPUT = """\
 #.##..##.
 ..#.##.#.
 ##......#
@@ -73,7 +73,7 @@ def print_mirrors(
 
 def analyze_map(mirrors: list[str]) -> int:
     """
-    >>> [analyze_map(mirrors) for mirrors in split_maps(TEST_INPUTS)]
+    >>> [analyze_map(mirrors) for mirrors in split_maps(TEST_INPUT)]
     [5, 400]
     """
     mirror_row = find_mirror_row(mirrors)
@@ -98,7 +98,7 @@ def split_maps(lines: str) -> list[list[str]]:
 
 def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUTS)
+    >>> process_lines(TEST_INPUT)
     405
     """
     return sum(analyze_map(mirrors) for mirrors in split_maps(lines))

@@ -2,15 +2,15 @@ import re
 
 from aocd import data
 
-TEST_INPUTS = [
-    "two1nine",
-    "eightwothree",
-    "abcone2threexyz",
-    "xtwone3four",
-    "4nineeightseven2",
-    "zoneight234",
-    "7pqrstsixteen",
-]
+TEST_INPUT = """\
+two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen
+"""
 DIGITS = {
     # zero was not included in the requirements
     "one": 1,
@@ -27,7 +27,7 @@ DIGITS = {
 
 def get_digits(line: str) -> int:
     """
-    >>> [get_digits(line) for line in TEST_INPUTS]
+    >>> [get_digits(line) for line in TEST_INPUT.splitlines()]
     [29, 83, 13, 24, 42, 14, 76]
     """
     digits = "|".join(DIGITS.keys())
@@ -47,16 +47,16 @@ def get_digits(line: str) -> int:
     return 10 * first_digit + second_digit
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUTS)
+    >>> process_lines(TEST_INPUT)
     281
     """
-    return sum(get_digits(line) for line in lines)
+    return sum(get_digits(line) for line in lines.splitlines())
 
 
 def main() -> int:
-    return process_lines(data.splitlines())
+    return process_lines(data)
 
 
 if __name__ == "__main__":

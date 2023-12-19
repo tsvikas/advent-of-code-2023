@@ -2,27 +2,28 @@ import functools
 
 from aocd import data
 
-TEST_INPUTS = [
-    "???.### 1,1,3",
-    ".??..??...?##. 1,1,3",
-    "?#?#?#?#?#?#?#? 1,3,1,6",
-    "????.#...#... 4,1,1",
-    "????.######..#####. 1,6,5",
-    "?###???????? 3,2,1",
-]
-TEST_INPUTS_2 = [
-    "???.###????.###????.###????.###????.### 1,1,3,1,1,3,1,1,3,1,1,3,1,1,3",
-    "?###??????????###??????????###??????????###??????????###???????? "
-    "3,2,1,3,2,1,3,2,1,3,2,1,3,2,1",
-]
+TEST_INPUT = """\
+???.### 1,1,3
+.??..??...?##. 1,1,3
+?#?#?#?#?#?#?#? 1,3,1,6
+????.#...#... 4,1,1
+????.######..#####. 1,6,5
+?###???????? 3,2,1
+"""
+TEST_INPUTS_2 = """\
+???.###????.###????.###????.###????.### \
+1,1,3,1,1,3,1,1,3,1,1,3,1,1,3
+?###??????????###??????????###??????????###??????????###???????? \
+3,2,1,3,2,1,3,2,1,3,2,1,3,2,1
+"""
 
 
 # ruff: noqa: FBT003
 def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
     """
-    >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS]
+    >>> [count_arrangements(*parse(line)) for line in TEST_INPUT.splitlines()]
     [1, 4, 1, 1, 4, 10]
-    >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS_2]
+    >>> [count_arrangements(*parse(line)) for line in TEST_INPUTS_2.splitlines()]
     [1, 506250]
     """
 
@@ -77,23 +78,23 @@ def count_arrangements(hot_springs: str, group_sizes: tuple[int, ...]) -> int:
 
 def parse(line: str) -> tuple[str, tuple[int, ...]]:
     """
-    >>> parse(TEST_INPUTS[0])
+    >>> parse(TEST_INPUT.splitlines()[0])
     ('???.###', (1, 1, 3))
     """
     s1, s2 = line.split()
     return s1, tuple(int(x) for x in s2.split(","))
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUTS)
+    >>> process_lines(TEST_INPUT)
     21
     """
-    return sum(count_arrangements(*parse(line)) for line in lines)
+    return sum(count_arrangements(*parse(line)) for line in lines.splitlines())
 
 
 def main() -> int:
-    return process_lines(data.splitlines())
+    return process_lines(data)
 
 
 if __name__ == "__main__":

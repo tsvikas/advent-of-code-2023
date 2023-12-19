@@ -6,13 +6,13 @@ from typing import Self
 
 from aocd import data
 
-TEST_INPUTS = [
-    "32T3K 765",
-    "T55J5 684",
-    "KK677 28",
-    "KTJJT 220",
-    "QQQJA 483",
-]
+TEST_INPUT = """\
+32T3K 765
+T55J5 684
+KK677 28
+KTJJT 220
+QQQJA 483
+"""
 
 
 class HandType(IntEnum):
@@ -66,23 +66,23 @@ class Hand:
 
 def get_winning(hands: Iterable[Hand]) -> list[int]:
     """
-    >>> get_winning([Hand.from_line(line) for line in TEST_INPUTS])
+    >>> get_winning([Hand.from_line(line) for line in TEST_INPUT.splitlines()])
     [765, 440, 84, 2736, 2415]
     """
     hands = sorted(hands, key=lambda hand: (hand.hand_type, hand.card_values))
     return [i * hand.bid for i, hand in enumerate(hands, 1)]
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUTS)
+    >>> process_lines(TEST_INPUT)
     6440
     """
-    return sum(get_winning(Hand.from_line(line) for line in lines))
+    return sum(get_winning(Hand.from_line(line) for line in lines.splitlines()))
 
 
 def main() -> int:
-    return process_lines(data.splitlines())
+    return process_lines(data)
 
 
 if __name__ == "__main__":

@@ -2,12 +2,17 @@ import re
 
 from aocd import data
 
-TEST_INPUTS = ["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"]
+TEST_INPUT = """\
+1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet
+"""
 
 
 def get_digits(line: str) -> int:
     """
-    >>> [get_digits(line) for line in TEST_INPUTS]
+    >>> [get_digits(line) for line in TEST_INPUT.splitlines()]
     [12, 38, 15, 77]
     """
     match = re.fullmatch(r"[^\d]*(\d).*(\d)[^\d]*", line)
@@ -22,16 +27,16 @@ def get_digits(line: str) -> int:
     return 10 * first_digit + second_digit
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUTS)
+    >>> process_lines(TEST_INPUT)
     142
     """
-    return sum(get_digits(line) for line in lines)
+    return sum(get_digits(line) for line in lines.splitlines())
 
 
 def main() -> int:
-    return process_lines(data.splitlines())
+    return process_lines(data)
 
 
 if __name__ == "__main__":

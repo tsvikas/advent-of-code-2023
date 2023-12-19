@@ -1,11 +1,11 @@
 from aocd import data
 
-from aoc2023.d4a import TEST_INPUTS, Card  # noqa: F401
+from aoc2023.d4a import TEST_INPUT, Card  # noqa: F401
 
 
 def get_cards_count(cards: list[Card]) -> list[int]:
     """
-    >>> get_cards_count([Card.from_line(line) for line in TEST_INPUTS])
+    >>> get_cards_count([Card.from_line(line) for line in TEST_INPUT.splitlines()])
     [1, 2, 4, 8, 14, 1]
     """
     cards_count = [1] * len(cards)
@@ -16,16 +16,16 @@ def get_cards_count(cards: list[Card]) -> list[int]:
     return cards_count
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUTS)
+    >>> process_lines(TEST_INPUT)
     30
     """
-    return sum(get_cards_count([Card.from_line(line) for line in lines]))
+    return sum(get_cards_count([Card.from_line(line) for line in lines.splitlines()]))
 
 
 def main() -> int:
-    return process_lines(data.splitlines())
+    return process_lines(data)
 
 
 if __name__ == "__main__":
