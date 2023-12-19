@@ -105,7 +105,7 @@ def find_enclosed(lines: list[str]) -> int:
     assert ((turns % 4) == 0).all()
     full_turns = abs(turns // 4)
     inner_locations: int = full_turns.sum()
-    return inner_locations
+    return int(inner_locations)
 
 
 def process_lines(lines: str) -> int:

@@ -21,7 +21,7 @@ def next_value(line: str) -> int:
     last_diff = 0
     for diff in reversed(diffs):
         last_diff += diff[-1]
-    return last_diff
+    return int(last_diff)
 
 
 def process_lines(lines: str) -> int:

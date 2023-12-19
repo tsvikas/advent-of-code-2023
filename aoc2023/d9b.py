@@ -16,7 +16,7 @@ def previous_value(line: str) -> int:
     last_diff = 0
     for diff in reversed(diffs):
         last_diff = diff[0] - last_diff
-    return last_diff
+    return int(last_diff)
 
 
 def process_lines(lines: str) -> int:
