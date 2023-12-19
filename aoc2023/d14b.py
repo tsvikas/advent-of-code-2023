@@ -1,7 +1,6 @@
-from aocd import data, submit  # type: ignore[attr-defined]
-
+from aoc2023.common import Solution
 from aoc2023.d14a import (
-    TEST_INPUT,  # noqa: F401
+    TEST_INPUT,
     RocksMap,
 )
 
@@ -61,17 +60,11 @@ def cycle(rocks: RocksMap, n: int) -> RocksMap:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    64
-    """
     rocks = RocksMap.from_lines(lines.splitlines())
     return cycle(rocks, 1_000_000_000).total_load_north()
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 64})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

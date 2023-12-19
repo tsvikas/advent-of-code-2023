@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 from typing import Self
 
-from aocd import data, submit  # type: ignore[attr-defined]
-
-from aoc2023.d18a import TEST_INPUT  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d18a import TEST_INPUT
 from aoc2023.grid import Point
 
 
@@ -97,16 +96,10 @@ class ShapeFixed:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    952408144115
-    """
     return ShapeFixed.from_lines(lines.splitlines()).get_area()
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 952408144115})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

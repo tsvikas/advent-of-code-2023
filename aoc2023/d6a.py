@@ -1,7 +1,7 @@
 import math
 from dataclasses import dataclass
 
-from aocd import data, submit  # type: ignore[attr-defined]
+from aoc2023.common import Solution
 
 TEST_INPUT = """\
 Time:      7  15   30
@@ -45,16 +45,10 @@ def parse_lines(lines: list[str]) -> list[Race]:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    288
-    """
     return math.prod(race.n_ways_to_beat() for race in parse_lines(lines.splitlines()))
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 288})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

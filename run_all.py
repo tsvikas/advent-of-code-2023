@@ -10,7 +10,7 @@ def main() -> None:
             except ModuleNotFoundError:
                 continue
             t_start = time()
-            answer = module.main()
+            answer = module.solution.solve()
             t_end = time()
             t_ms = (t_end - t_start) * 1000
             print(f"[{t_ms:7.1f} ms] d{day}{part}: {answer}")

@@ -1,8 +1,7 @@
 import collections
 
-from aocd import data, submit  # type: ignore[attr-defined]
-
-from aoc2023.d7a import TEST_INPUT, Hand, HandType, get_winning  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d7a import TEST_INPUT, Hand, HandType, get_winning
 
 
 class HandWithJoker(Hand):
@@ -38,18 +37,12 @@ class HandWithJoker(Hand):
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    5905
-    """
     return sum(
         get_winning(HandWithJoker.from_line(line) for line in lines.splitlines())
     )
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 5905})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

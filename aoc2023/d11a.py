@@ -1,7 +1,7 @@
 import itertools
 from collections.abc import Generator, Iterable
 
-from aocd import data, submit  # type: ignore[attr-defined]
+from aoc2023.common import Solution
 
 TEST_INPUT = """\
 ...#......
@@ -84,16 +84,10 @@ def distance_galaxies_on_map(lines: list[str]) -> list[int]:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    374
-    """
     return sum(distance_galaxies_on_map(lines.splitlines()))
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 374})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

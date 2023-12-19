@@ -1,7 +1,7 @@
-from aocd import data, submit  # type: ignore[attr-defined]
 from joblib.parallel import Parallel, delayed  # type: ignore[import-untyped]
 
-from aoc2023.d16a import TEST_INPUT, MirrorGrid  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d16a import TEST_INPUT, MirrorGrid
 from aoc2023.grid import Point
 
 
@@ -25,16 +25,10 @@ def max_energized(line: str) -> int:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    51
-    """
     return max_energized(lines)
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 51})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

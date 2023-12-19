@@ -1,6 +1,6 @@
 import functools
 
-from aocd import data, submit  # type: ignore[attr-defined]
+from aoc2023.common import Solution
 
 TEST_INPUT = """\
 ???.### 1,1,3
@@ -86,16 +86,10 @@ def parse(line: str) -> tuple[str, tuple[int, ...]]:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    21
-    """
     return sum(count_arrangements(*parse(line)) for line in lines.splitlines())
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 21})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

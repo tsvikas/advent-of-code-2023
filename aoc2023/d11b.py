@@ -1,9 +1,8 @@
 import itertools
 from collections.abc import Generator, Iterable
 
-from aocd import data, submit  # type: ignore[attr-defined]
-
-from aoc2023.d11a import TEST_INPUT, extract_galaxies  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d11a import TEST_INPUT, extract_galaxies
 
 
 def find_empty_rows_and_cols(grid: list[str]) -> tuple[list[int], list[int]]:
@@ -76,9 +75,7 @@ def process_lines(lines: str, expansion_factor: int = 1000000) -> int:
     return sum(distance_galaxies_on_map(lines.splitlines(), expansion_factor))
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 82000210})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

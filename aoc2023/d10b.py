@@ -1,6 +1,6 @@
 import numpy as np
-from aocd import data, submit  # type: ignore[attr-defined]
 
+from aoc2023.common import Solution
 from aoc2023.d10a import (
     Point,
     get_next_direction,
@@ -109,22 +109,14 @@ def find_enclosed(lines: list[str]) -> int:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT_1)
-    4
-    >>> process_lines(TEST_INPUT_2)
-    4
-    >>> process_lines(TEST_INPUT_3)
-    8
-    >>> process_lines(TEST_INPUT_4)
-    10
-    """
     return find_enclosed(lines.splitlines())
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(
+    __file__,
+    process_lines,
+    {TEST_INPUT_1: 4, TEST_INPUT_2: 4, TEST_INPUT_3: 8, TEST_INPUT_4: 10},
+)
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

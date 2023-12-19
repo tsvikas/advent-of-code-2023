@@ -1,8 +1,7 @@
 import collections
 
-from aocd import data, submit  # type: ignore[attr-defined]
-
-from aoc2023.d13a import TEST_INPUT, print_mirrors, split_maps, transpose  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d13a import TEST_INPUT, print_mirrors, split_maps, transpose
 
 
 def find_mirror_row_above(mirrors: list[str]) -> list[int]:
@@ -74,16 +73,10 @@ def analyze_map(mirrors: list[str]) -> int:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    400
-    """
     return sum(analyze_map(mirrors) for mirrors in split_maps(lines))
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 400})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

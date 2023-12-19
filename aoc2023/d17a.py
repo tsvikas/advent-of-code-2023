@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from typing import Self
 
 import networkx as nx
-from aocd import data, submit  # type: ignore[attr-defined]
+
+from aoc2023.common import Solution
 
 TEST_INPUT = """\
 2413432311323
@@ -96,16 +97,10 @@ class HeatGrid:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    102
-    """
     return HeatGrid.from_line(lines).least_heat_loss()
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 102})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

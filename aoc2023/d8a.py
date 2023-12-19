@@ -3,7 +3,7 @@ import re
 from dataclasses import dataclass
 from typing import Self
 
-from aocd import data, submit  # type: ignore[attr-defined]
+from aoc2023.common import Solution
 
 TEST_INPUT_1 = """\
 RL
@@ -54,18 +54,12 @@ class Page:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT_1)
-    2
-    >>> process_lines(TEST_INPUT_2)
-    6
-    """
     return Page.from_lines(lines.splitlines()).steps_to_end()
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(
+    __file__, process_lines, {TEST_INPUT_1: 2, TEST_INPUT_2: 6}
+)
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

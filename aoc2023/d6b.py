@@ -1,6 +1,5 @@
-from aocd import data, submit  # type: ignore[attr-defined]
-
-from aoc2023.d6a import TEST_INPUT, Race  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d6a import TEST_INPUT, Race
 
 
 def parse_lines(lines: list[str]) -> Race:
@@ -14,16 +13,10 @@ def parse_lines(lines: list[str]) -> Race:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    71503
-    """
     return parse_lines(lines.splitlines()).n_ways_to_beat()
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 71503})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

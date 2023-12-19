@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from aocd import data, submit  # type: ignore[attr-defined]
+from aoc2023.common import Solution
 
 TEST_INPUT_1 = """\
 .....
@@ -87,18 +87,12 @@ def find_farthest(lines: list[str]) -> int:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT_1)
-    4
-    >>> process_lines(TEST_INPUT_2)
-    8
-    """
     return find_farthest(lines.splitlines())
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(
+    __file__, process_lines, {TEST_INPUT_1: 4, TEST_INPUT_2: 8}
+)
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

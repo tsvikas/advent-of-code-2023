@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from aocd import data, submit  # type: ignore[attr-defined]
+from aoc2023.common import Solution
 
 TEST_INPUT = """\
 Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -44,16 +44,10 @@ class Card:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    13
-    """
     return sum(Card.from_line(line).score() for line in lines.splitlines())
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 13})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

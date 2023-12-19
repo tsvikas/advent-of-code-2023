@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 import more_itertools
-from aocd import data, submit  # type: ignore[attr-defined]
+
+from aoc2023.common import Solution
 
 TEST_INPUT = """\
 seeds: 79 14 55 13
@@ -137,16 +138,10 @@ def find_location_from_seed(maps: dict[str, Map], seed: int) -> int:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    35
-    """
     return min(find_locations_from_input(lines.splitlines()))
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 35})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

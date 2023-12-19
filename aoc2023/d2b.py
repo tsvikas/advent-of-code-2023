@@ -1,6 +1,5 @@
-from aocd import data, submit  # type: ignore[attr-defined]
-
-from aoc2023.d2a import TEST_INPUT, Game  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d2a import TEST_INPUT, Game
 
 
 class GameWithPower(Game):
@@ -15,16 +14,10 @@ class GameWithPower(Game):
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    2286
-    """
     return sum(GameWithPower.from_line(line).power for line in lines.splitlines())
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 2286})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

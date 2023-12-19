@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 from typing import Self
 
-from aocd import data, submit  # type: ignore[attr-defined]
-
-from aoc2023.d19a import TEST_INPUT, Pipeline  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d19a import TEST_INPUT, Pipeline
 
 
 @dataclass
@@ -131,10 +130,6 @@ def use_pipelines(
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    167409079868000
-    """
     pipelines_s, _parts_s = lines.split("\n\n")
     pipelines = dict(Pipeline.from_line(line) for line in pipelines_s.splitlines())
     part_ranges = [(PartRange.full_range(), "in")]
@@ -146,9 +141,7 @@ def process_lines(lines: str) -> int:
     )
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 167409079868000})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

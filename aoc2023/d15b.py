@@ -1,7 +1,6 @@
-from aocd import data, submit  # type: ignore[attr-defined]
-
+from aoc2023.common import Solution
 from aoc2023.d15a import (
-    TEST_INPUT,  # noqa: F401
+    TEST_INPUT,
     hash_value,
 )
 
@@ -58,16 +57,10 @@ def focusing_powers(
 
 
 def process_lines(line: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    145
-    """
     return sum(focusing_powers(*follow_instructions(line)).values())
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 145})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

@@ -1,7 +1,7 @@
 import numpy as np
-from aocd import data, submit  # type: ignore[attr-defined]
 
-from aoc2023.d9a import TEST_INPUT  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d9a import TEST_INPUT
 
 
 def previous_value(line: str) -> int:
@@ -20,16 +20,10 @@ def previous_value(line: str) -> int:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    2
-    """
     return sum(previous_value(line) for line in lines.splitlines())
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 2})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

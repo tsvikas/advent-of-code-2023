@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
 import more_itertools
-from aocd import data, submit  # type: ignore[attr-defined]
 
-from aoc2023.d5a import TEST_INPUT, RangeMap  # noqa: F401
+from aoc2023.common import Solution
+from aoc2023.d5a import TEST_INPUT, RangeMap
 
 
 @dataclass
@@ -169,16 +169,10 @@ def min_in_ranges(src_ranges: SrcRanges) -> int:
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    46
-    """
     return min_in_ranges(find_location_ranges_from_input(lines.splitlines()))
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 46})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()

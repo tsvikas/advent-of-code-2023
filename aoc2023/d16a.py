@@ -1,5 +1,4 @@
-from aocd import data, submit  # type: ignore[attr-defined]
-
+from aoc2023.common import Solution
 from aoc2023.grid import Grid, Point
 
 TEST_INPUT = r"""
@@ -90,16 +89,10 @@ class MirrorGrid(Grid):
 
 
 def process_lines(lines: str) -> int:
-    """
-    >>> process_lines(TEST_INPUT)
-    46
-    """
     return MirrorGrid.from_string(lines).beam_energy()
 
 
-def main() -> int:
-    return process_lines(data)
-
+solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 46})
 
 if __name__ == "__main__":
-    submit(main(), part=__file__[-4])
+    solution.submit()
