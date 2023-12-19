@@ -3,7 +3,7 @@ import re
 from dataclasses import dataclass
 from typing import Self
 
-from aocd import data
+from aocd import data, submit  # type: ignore[attr-defined]
 
 TEST_INPUT_1 = """\
 RL
@@ -68,4 +68,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    print(main())
+    submit(main(), part=__file__[-4])

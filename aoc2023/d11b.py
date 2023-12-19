@@ -1,7 +1,7 @@
 import itertools
 from collections.abc import Generator, Iterable
 
-from aocd import data
+from aocd import data, submit  # type: ignore[attr-defined]
 
 from aoc2023.d11a import TEST_INPUT, extract_galaxies  # noqa: F401
 
@@ -81,4 +81,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    print(main())
+    submit(main(), part=__file__[-4])

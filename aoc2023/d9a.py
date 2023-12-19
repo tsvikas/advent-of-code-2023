@@ -1,5 +1,5 @@
 import numpy as np
-from aocd import data
+from aocd import data, submit  # type: ignore[attr-defined]
 
 TEST_INPUT = """\
 0 3 6 9 12 15
@@ -36,4 +36,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    print(main())
+    submit(main(), part=__file__[-4])

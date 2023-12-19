@@ -1,4 +1,4 @@
-from aocd import data
+from aocd import data, submit  # type: ignore[attr-defined]
 from joblib.parallel import Parallel, delayed  # type: ignore[import-untyped]
 
 from aoc2023.d16a import TEST_INPUT, MirrorGrid  # noqa: F401
@@ -37,4 +37,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    print(main())
+    submit(main(), part=__file__[-4])

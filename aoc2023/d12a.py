@@ -1,6 +1,6 @@
 import functools
 
-from aocd import data
+from aocd import data, submit  # type: ignore[attr-defined]
 
 TEST_INPUT = """\
 ???.### 1,1,3
@@ -98,4 +98,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    print(main())
+    submit(main(), part=__file__[-4])

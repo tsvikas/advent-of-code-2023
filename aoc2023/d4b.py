@@ -1,4 +1,4 @@
-from aocd import data
+from aocd import data, submit  # type: ignore[attr-defined]
 
 from aoc2023.d4a import TEST_INPUT, Card  # noqa: F401
 
@@ -29,4 +29,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    print(main())
+    submit(main(), part=__file__[-4])

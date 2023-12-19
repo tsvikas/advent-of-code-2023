@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from aocd import data
+from aocd import data, submit  # type: ignore[attr-defined]
 
 TEST_INPUT = """\
 Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -56,4 +56,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    print(main())
+    submit(main(), part=__file__[-4])
