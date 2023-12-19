@@ -27,14 +27,23 @@ U 2 (#7a21e3)
 class Shape:
     locations: dict[Point, str]
 
+    @staticmethod
+    def split_line(line: str) -> tuple[str, int]:
+        """
+        >>> Shape.split_line("R 6 (#70c710)")
+        ('R', 6)
+        """
+        direction, distance_s, _color = line.split()
+        distance = int(distance_s)
+        return direction, distance
+
     @classmethod
     def from_lines(cls, lines: list[str]) -> Self:
         location = Point(0, 0)
         locations = {}
-        last_direction = lines[-1].split()[0]
+        last_direction = cls.split_line(lines[-1])[0]
         for line in lines:
-            direction, distance_s, _color = line.split()
-            distance = int(distance_s)
+            direction, distance = cls.split_line(line)
             locations[location] = {
                 ("U", "L"): "7",
                 ("U", "R"): "F",
