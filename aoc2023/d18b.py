@@ -96,18 +96,16 @@ class ShapeFixed:
         return self.get_interior_area() + self.get_boundry_area()
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     952408144115
     """
-    return ShapeFixed.from_lines(lines).get_area()
+    return ShapeFixed.from_lines(lines.splitlines()).get_area()
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

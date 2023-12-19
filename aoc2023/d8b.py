@@ -74,18 +74,16 @@ class PageForGhost(Page):
         plt.show()
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     6
     """
-    return PageForGhost.from_lines(lines).steps_to_end()
+    return PageForGhost.from_lines(lines.splitlines()).steps_to_end()
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

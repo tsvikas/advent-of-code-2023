@@ -86,20 +86,18 @@ def find_farthest(lines: list[str]) -> int:
     return max_distance
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT_1.splitlines())
+    >>> process_lines(TEST_INPUT_1)
     4
-    >>> process_lines(TEST_INPUT_2.splitlines())
+    >>> process_lines(TEST_INPUT_2)
     8
     """
-    return find_farthest(lines)
+    return find_farthest(lines.splitlines())
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

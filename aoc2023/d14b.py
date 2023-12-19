@@ -60,19 +60,17 @@ def cycle(rocks: RocksMap, n: int) -> RocksMap:
     return rocks
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     64
     """
-    rocks = RocksMap.from_lines(lines)
+    rocks = RocksMap.from_lines(lines.splitlines())
     return cycle(rocks, 1_000_000_000).total_load_north()
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

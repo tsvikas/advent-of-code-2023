@@ -64,22 +64,20 @@ def distance_galaxies_on_map(lines: list[str], expansion_factor: int) -> list[in
     return list(distances)
 
 
-def process_lines(lines: list[str], expansion_factor: int) -> int:
+def process_lines(lines: str, expansion_factor: int = 1000000) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines(), 2)
+    >>> process_lines(TEST_INPUT, 2)
     374
-    >>> process_lines(TEST_INPUT.splitlines(), 10)
+    >>> process_lines(TEST_INPUT, 10)
     1030
-    >>> process_lines(TEST_INPUT.splitlines(), 100)
+    >>> process_lines(TEST_INPUT, 100)
     8410
     """
-    return sum(distance_galaxies_on_map(lines, expansion_factor))
+    return sum(distance_galaxies_on_map(lines.splitlines(), expansion_factor))
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines, 1000000)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

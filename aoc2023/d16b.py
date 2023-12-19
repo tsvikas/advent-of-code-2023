@@ -24,18 +24,16 @@ def max_energized(line: str) -> int:
     return max(beam_energies)
 
 
-def process_lines(line: str) -> int:
+def process_lines(lines: str) -> int:
     """
     >>> process_lines(TEST_INPUT)
     51
     """
-    return max_energized(line)
+    return max_energized(lines)
 
 
 def main() -> int:
-    lines = data
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

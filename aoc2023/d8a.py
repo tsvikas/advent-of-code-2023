@@ -53,20 +53,18 @@ class Page:
         raise RuntimeError("Unreachable")
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT_1.splitlines())
+    >>> process_lines(TEST_INPUT_1)
     2
-    >>> process_lines(TEST_INPUT_2.splitlines())
+    >>> process_lines(TEST_INPUT_2)
     6
     """
-    return Page.from_lines(lines).steps_to_end()
+    return Page.from_lines(lines.splitlines()).steps_to_end()
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

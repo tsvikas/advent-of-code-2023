@@ -136,18 +136,16 @@ def find_location_from_seed(maps: dict[str, Map], seed: int) -> int:
     return current_value
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     35
     """
-    return min(find_locations_from_input(lines))
+    return min(find_locations_from_input(lines.splitlines()))
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

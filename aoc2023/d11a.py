@@ -83,18 +83,16 @@ def distance_galaxies_on_map(lines: list[str]) -> list[int]:
     return list(distances)
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     374
     """
-    return sum(distance_galaxies_on_map(lines))
+    return sum(distance_galaxies_on_map(lines.splitlines()))
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

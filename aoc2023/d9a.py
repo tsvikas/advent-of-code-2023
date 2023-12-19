@@ -32,9 +32,7 @@ def process_lines(lines: list[str]) -> int:
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data.splitlines())
 
 
 if __name__ == "__main__":

@@ -35,18 +35,16 @@ def extract_gear_ratios(engine_schematic: list[str]) -> list[int]:
     return gear_ratios
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     467835
     """
-    return sum(extract_gear_ratios(lines))
+    return sum(extract_gear_ratios(lines.splitlines()))
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

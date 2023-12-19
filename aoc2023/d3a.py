@@ -43,18 +43,16 @@ def extract_part_numbers(engine_schematic: list[str]) -> list[int]:
     return part_numbers
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     4361
     """
-    return sum(extract_part_numbers(lines))
+    return sum(extract_part_numbers(lines.splitlines()))
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

@@ -134,18 +134,16 @@ class Shape:
         return area
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     62
     """
-    return Shape.from_lines(lines).get_area()
+    return Shape.from_lines(lines.splitlines()).get_area()
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

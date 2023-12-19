@@ -168,18 +168,16 @@ def min_in_ranges(src_ranges: SrcRanges) -> int:
     return min(src_range.start for src_range in src_ranges)
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     46
     """
-    return min_in_ranges(find_location_ranges_from_input(lines))
+    return min_in_ranges(find_location_ranges_from_input(lines.splitlines()))
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

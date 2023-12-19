@@ -148,18 +148,16 @@ class RocksMap:
         )
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     136
     """
-    return RocksMap.from_lines(lines).tilt_north().total_load_north()
+    return RocksMap.from_lines(lines.splitlines()).tilt_north().total_load_north()
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

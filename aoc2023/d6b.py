@@ -13,18 +13,16 @@ def parse_lines(lines: list[str]) -> Race:
     return Race(time, distance)
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     71503
     """
-    return parse_lines(lines).n_ways_to_beat()
+    return parse_lines(lines.splitlines()).n_ways_to_beat()
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

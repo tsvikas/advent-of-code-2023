@@ -25,9 +25,7 @@ def process_lines(line: str) -> int:
 
 
 def main() -> int:
-    line = data
-    result = process_lines(line)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

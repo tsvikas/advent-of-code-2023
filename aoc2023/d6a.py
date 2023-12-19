@@ -44,18 +44,16 @@ def parse_lines(lines: list[str]) -> list[Race]:
     return [Race(t, d) for t, d in zip(times, distances, strict=True)]
 
 
-def process_lines(lines: list[str]) -> int:
+def process_lines(lines: str) -> int:
     """
-    >>> process_lines(TEST_INPUT.splitlines())
+    >>> process_lines(TEST_INPUT)
     288
     """
-    return math.prod(race.n_ways_to_beat() for race in parse_lines(lines))
+    return math.prod(race.n_ways_to_beat() for race in parse_lines(lines.splitlines()))
 
 
 def main() -> int:
-    lines = data.splitlines()
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":

@@ -98,9 +98,7 @@ def process_lines(lines: str) -> int:
 
 
 def main() -> int:
-    lines = data
-    result = process_lines(lines)
-    return result
+    return process_lines(data)
 
 
 if __name__ == "__main__":
