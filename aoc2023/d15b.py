@@ -1,8 +1,5 @@
 from aoc2023.common import Solution
-from aoc2023.d15a import (
-    TEST_INPUT,
-    hash_value,
-)
+from aoc2023.d15a import TEST_INPUT, hash_value
 
 
 def follow_instructions(line: str) -> tuple[dict[int, list[str]], dict[str, int]]:

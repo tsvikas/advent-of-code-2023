@@ -1,8 +1,5 @@
 from aoc2023.common import Solution
-from aoc2023.d14a import (
-    TEST_INPUT,
-    RocksMap,
-)
+from aoc2023.d14a import TEST_INPUT, RocksMap
 
 
 def cycle(rocks: RocksMap, n: int) -> RocksMap:

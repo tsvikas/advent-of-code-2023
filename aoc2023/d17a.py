@@ -88,10 +88,7 @@ class HeatGrid:
     def least_heat_loss(self, min_line: int = 1, max_line: int = 3) -> int:
         graph = self.to_graph(min_line, max_line)
         shortest_path_length: int = nx.shortest_path_length(
-            graph,
-            "start",
-            "end",
-            weight="weight",
+            graph, "start", "end", weight="weight"
         )
         return shortest_path_length
 
