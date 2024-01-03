@@ -136,11 +136,41 @@ class Modules:
             self.process_signals()
         return self.signals_low, self.signals_high
 
+    def rx_low_count(self) -> int:
+        assert "rx" in self.module_num_inputs
+        pointing_to_rx = [
+            module for module, targets in self.cables.items() if "rx" in targets
+        ]
+        assert len(pointing_to_rx) == 1
+        target = pointing_to_rx[0]
+        modules_to_measure = {
+            module: 0 for module, targets in self.cables.items() if target in targets
+        }
+        assert all(
+            self.modules[module] == ModuleType.CONJUNCTION
+            for module in modules_to_measure
+        )
+        self.signals.append(("button", "low", "broadcaster"))
+        self.button_pressed += 1
+        _changed_modules = self.process_signals()
+        while True:
+            self.signals.append(("button", "low", "broadcaster"))
+            self.button_pressed += 1
+            changed_modules = self.process_signals()
+            for module in changed_modules:
+                if modules_to_measure.get(module, -1) == 0:
+                    modules_to_measure[module] = self.button_pressed
+            if all(modules_to_measure.values()):
+                return math.prod(modules_to_measure.values())
+
     def send_from(self, source: str, signal: str) -> None:
         for target in self.cables[source]:
             self.signals.append((source, signal, target))
 
-    def process_signals(self, *, print_signals: bool = False) -> None:  # noqa: PLR0912
+    def process_signals(  # noqa: PLR0912
+        self, *, print_signals: bool = False
+    ) -> set[str]:
+        changed_modules = set()
         while self.signals:
             source, signal, target = self.signals.pop(0)
             if signal == "low":
@@ -168,6 +198,10 @@ class Modules:
                     else:
                         raise ValueError(f"illegal signal {signal}")
                 case ModuleType.CONJUNCTION:
+                    last_conj = (
+                        len(self.memory_conjunction[target])
+                        == self.module_num_inputs[target]
+                    )
                     if signal == "high":
                         self.memory_conjunction[target].add(source)
                     elif signal == "low":
@@ -176,15 +210,19 @@ class Modules:
                     else:
                         raise ValueError(f"illegal signal {signal}")
                     # send low pulse if all inputs are high
-                    if (
+                    new_conj = (
                         len(self.memory_conjunction[target])
                         == self.module_num_inputs[target]
-                    ):
+                    )
+                    if new_conj != last_conj:
+                        changed_modules.add(target)
+                    if new_conj:
                         self.send_from(target, "low")
                     else:
                         self.send_from(target, "high")
                 case _:
                     raise ValueError(f"illegal module type {self.modules[target]}")
+        return changed_modules
 
 
 def process_lines(lines: str) -> int:
