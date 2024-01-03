@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Self
 
+import networkx as nx
+
 from aoc2023.common import Solution
 
 TEST_INPUT = """\
@@ -49,6 +51,15 @@ class Modules:
         for target_names in self.cables.values():
             for target_name in target_names:
                 self.module_num_inputs[target_name] += 1
+
+    def to_graph(self) -> nx.DiGraph:
+        graph = nx.DiGraph()
+        for module_name, module_type in self.modules.items():
+            graph.add_node(module_name, type=module_type)
+        for source, targets in self.cables.items():
+            for target in targets:
+                graph.add_edge(source, target)
+        return graph
 
     @classmethod
     def from_lines(cls, lines: str) -> Self:
