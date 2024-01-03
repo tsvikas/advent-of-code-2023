@@ -54,23 +54,31 @@ class Modules:
             for target_name in target_names:
                 self.module_num_inputs[target_name] += 1
 
-    def to_graph(self) -> nx.DiGraph:
+    def to_graph(self, *, only_conj: bool = False) -> nx.DiGraph:
         graph = nx.DiGraph()
         for module_name, module_type in self.modules.items():
-            graph.add_node(module_name, type=module_type)
+            if not only_conj or module_type == ModuleType.CONJUNCTION:
+                graph.add_node(module_name, type=module_type)
         for source, targets in self.cables.items():
             for target in targets:
-                graph.add_edge(source, target)
+                if (
+                    not only_conj
+                    or self.modules[source] == ModuleType.CONJUNCTION
+                    and (
+                        target == "rx" or self.modules[target] == ModuleType.CONJUNCTION
+                    )
+                ):
+                    graph.add_edge(source, target)
         return graph
 
-    def plot_graph(self) -> None:
+    def plot_graph(self, *, only_conj: bool = False) -> None:
         color_map = {
             "broadcaster": "blue",
             "%": "green",
             "&": "red",
             "": "yellow",
         }
-        g = self.to_graph()
+        g = self.to_graph(only_conj=only_conj)
         colors = [color_map[g.nodes[node].get("type", "")] for node in g]
         node_pos = nx.planar_layout(g, scale=1)
         nx.draw(g, node_color=colors, with_labels=True, pos=node_pos)
