@@ -132,7 +132,7 @@ class Modules:
         for target in self.cables[source]:
             self.signals.append((source, signal, target))
 
-    def process_signals(self, *, verbose: bool = False) -> None:  # noqa: PLR0912
+    def process_signals(self, *, print_signals: bool = False) -> None:  # noqa: PLR0912
         while self.signals:
             source, signal, target = self.signals.pop(0)
             if signal == "low":
@@ -141,7 +141,7 @@ class Modules:
                 self.signals_high += 1
             else:
                 raise ValueError(f"illegal signal {signal}")
-            if verbose:
+            if print_signals:
                 print(f"{source} -{signal}-> {target}")
             if target not in self.modules:
                 continue
