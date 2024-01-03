@@ -46,6 +46,7 @@ class Modules:
     signals: list[tuple[str, str, str]] = field(default_factory=list)
     signals_low: int = 0
     signals_high: int = 0
+    button_pressed: int = 0
 
     def __post_init__(self) -> None:
         self.module_num_inputs = defaultdict(int)
@@ -109,11 +110,11 @@ class Modules:
 
     def press_button(self, n: int) -> tuple[int, int]:
         cache: dict[ModulesState, tuple[int, int, int]] = {}
-        for button_pressed in range(n):
+        for _ in range(n):
             state = self.freeze_memory()
             if state in cache:
-                remaining_presses = n - button_pressed
-                cycle = button_pressed - cache[state][0]
+                remaining_presses = n - self.button_pressed
+                cycle = self.button_pressed - cache[state][0]
                 if remaining_presses % cycle == 0:
                     remaining_cycles = remaining_presses // cycle
                     low_per_cycle = self.signals_low - cache[state][1]
@@ -121,8 +122,9 @@ class Modules:
                     self.signals_low += low_per_cycle * remaining_cycles
                     self.signals_high += high_per_cycle * remaining_cycles
                     return self.signals_low, self.signals_high
-            cache[state] = button_pressed, self.signals_low, self.signals_high
+            cache[state] = self.button_pressed, self.signals_low, self.signals_high
             self.signals.append(("button", "low", "broadcaster"))
+            self.button_pressed += 1
             self.process_signals()
         return self.signals_low, self.signals_high
 
