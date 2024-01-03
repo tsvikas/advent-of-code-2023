@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Self
 
+import matplotlib.pyplot as plt
 import networkx as nx
 
 from aoc2023.common import Solution
@@ -60,6 +61,19 @@ class Modules:
             for target in targets:
                 graph.add_edge(source, target)
         return graph
+
+    def plot_graph(self) -> None:
+        color_map = {
+            "broadcaster": "blue",
+            "%": "green",
+            "&": "red",
+            "": "yellow",
+        }
+        g = self.to_graph()
+        colors = [color_map[g.nodes[node].get("type", "")] for node in g]
+        node_pos = nx.planar_layout(g, scale=1)
+        nx.draw(g, node_color=colors, with_labels=True, pos=node_pos)
+        plt.show()
 
     @classmethod
     def from_lines(cls, lines: str) -> Self:
