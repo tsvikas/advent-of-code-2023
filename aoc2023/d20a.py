@@ -28,6 +28,11 @@ class ModuleType(StrEnum):
     BROADCASTER = "broadcaster"
 
 
+ModulesState = tuple[
+    tuple[tuple[str, bool], ...], tuple[tuple[str, frozenset[str]], ...]
+]
+
+
 @dataclass
 class Modules:
     modules: dict[str, ModuleType]
@@ -68,9 +73,30 @@ class Modules:
                 memory_conjunction[module_name] = set()
         return cls(modules, cables, memory_flipflop, memory_conjunction)
 
+    def freeze_memory(
+        self,
+    ) -> ModulesState:
+        memory_flipflop = tuple((k, v) for k, v in self.memory_flipflop.items())
+        memory_conjunction = tuple(
+            (k, frozenset(v)) for k, v in self.memory_conjunction.items()
+        )
+        return memory_flipflop, memory_conjunction
+
     def press_button(self, n: int) -> tuple[int, int]:
-        # TODO: add cache
-        for _ in range(n):
+        cache: dict[ModulesState, tuple[int, int, int]] = {}
+        for button_pressed in range(n):
+            state = self.freeze_memory()
+            if state in cache:
+                remaining_presses = n - button_pressed
+                cycle = button_pressed - cache[state][0]
+                if remaining_presses % cycle == 0:
+                    remaining_cycles = remaining_presses // cycle
+                    low_per_cycle = self.signals_low - cache[state][1]
+                    high_per_cycle = self.signals_high - cache[state][2]
+                    self.signals_low += low_per_cycle * remaining_cycles
+                    self.signals_high += high_per_cycle * remaining_cycles
+                    return self.signals_low, self.signals_high
+            cache[state] = button_pressed, self.signals_low, self.signals_high
             self.signals.append(("button", "low", "broadcaster"))
             self.process_signals()
         return self.signals_low, self.signals_high
