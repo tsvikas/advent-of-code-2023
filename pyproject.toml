@@ -87,6 +87,7 @@ ignore = [
     "PLR0911",  # PyLint-Refactor/too-many-return-statements
     "C901",     # mccabe/complex-structure
     "B008",
+    "FIX002",   # TODOs
     # ban something useful for a good reason
     # "FBT001",   # flake8-boolean-trap/boolean-type-hint-positional-argument
     # "FBT002",   # flake8-boolean-trap/boolean-default-value-positional-argument
