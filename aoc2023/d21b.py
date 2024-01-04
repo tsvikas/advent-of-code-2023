@@ -60,7 +60,11 @@ def process_lines(lines: str, n: int = 26501365) -> int:
 solution = Solution.from_file(
     __file__,
     process_lines,
-    {(TEST_INPUT, 5 + 4 * 11): process_lines_a(TEST_INPUT_EXPANDED, 5 + 4 * 11)},
+    {
+        (TEST_INPUT, 5 + 4 * 11): (
+            lambda: process_lines_a(TEST_INPUT_EXPANDED, 5 + 4 * 11)
+        )
+    },
 )
 
 if __name__ == "__main__":

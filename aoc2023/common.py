@@ -6,6 +6,7 @@ from aocd import get_data, submit  # type: ignore[attr-defined]
 
 SolveInput = str | tuple[Any, ...]
 SolveFunc = Callable[[Any], int]
+SolveOutput = int | Callable[[], int]
 
 
 @dataclass
@@ -14,11 +15,14 @@ class Solution:
     day: int
     part: str
     process_lines: SolveFunc
-    tests: dict[SolveInput, int]
+    tests: dict[SolveInput, SolveOutput]
 
     @classmethod
     def from_file(
-        cls, filename: str, process_lines: SolveFunc, tests: dict[SolveInput, int]
+        cls,
+        filename: str,
+        process_lines: SolveFunc,
+        tests: dict[SolveInput, SolveOutput],
     ) -> Self:
         year = int(filename.split("/")[-2][-4:])
         day = int(filename.split("/")[-1].split(".")[0][1:-1])
@@ -26,11 +30,12 @@ class Solution:
         return cls(year, day, part, process_lines, tests)
 
     def test_inputs(self) -> None:
-        for i, (test, expected) in enumerate(self.tests.items()):
+        for i, (test, expected_f) in enumerate(self.tests.items()):
             if isinstance(test, tuple):
                 actual = self.process_lines(*test)
             else:
                 actual = self.process_lines(test)
+            expected = expected_f() if callable(expected_f) else expected_f
             assert actual == expected, f"{i}: {actual=} {expected=}"
 
     def solve(self) -> int:
