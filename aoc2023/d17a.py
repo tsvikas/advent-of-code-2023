@@ -3,7 +3,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Any, Self
 
-import networkx as nx
+import igraph as ig  # type: ignore[import-untyped]
 
 from aoc2023.common import Solution
 
@@ -81,16 +81,21 @@ class HeatGrid:
             yield (y_end, x_end, +distance, 0), "end", 0
             yield (y_end, x_end, -distance, 0), "end", 0
 
-    def to_graph(self, min_line: int = 1, max_line: int = 3) -> nx.DiGraph:
-        graph = nx.DiGraph()
-        edges = self.get_weighted_edges(min_line, max_line)
-        graph.add_weighted_edges_from(edges)
+    def to_graph(self, min_line: int = 1, max_line: int = 3) -> ig.Graph:
+        edges_w = list(self.get_weighted_edges(min_line, max_line))
+        edges = [(str(edge[0]), str(edge[1])) for edge in edges_w]
+        weights = [edge[2] for edge in edges_w]
+        nodes = list({edge[0] for edge in edges} | {edge[1] for edge in edges})
+
+        graph = ig.Graph(directed=True)
+        graph.add_vertices(nodes)
+        graph.add_edges(edges, attributes={"weight": weights})
         return graph
 
     def least_heat_loss(self, min_line: int = 1, max_line: int = 3) -> int:
         graph = self.to_graph(min_line, max_line)
-        shortest_path_length: int = nx.shortest_path_length(
-            graph, "start", "end", weight="weight"
+        shortest_path_length = int(
+            graph.distances("start", "end", weights="weight")[0][0]
         )
         return shortest_path_length
 
