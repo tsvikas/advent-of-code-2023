@@ -18,10 +18,7 @@ class Solution:
 
     @classmethod
     def from_file(
-        cls,
-        filename: str,
-        process_lines: SolveFunc,
-        tests: dict[SolveInput, int],
+        cls, filename: str, process_lines: SolveFunc, tests: dict[SolveInput, int]
     ) -> Self:
         year = int(filename.split("/")[-2][-4:])
         day = int(filename.split("/")[-1].split(".")[0][1:-1])

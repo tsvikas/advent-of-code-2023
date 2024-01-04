@@ -1,11 +1,6 @@
 from aoc2023.common import Solution
-from aoc2023.d21a import (
-    count_reachable,
-    map_to_locations,
-)
-from aoc2023.d21a import (
-    process_lines as process_lines_a,
-)
+from aoc2023.d21a import count_reachable, map_to_locations
+from aoc2023.d21a import process_lines as process_lines_a
 
 TEST_INPUT = """\
 ...........

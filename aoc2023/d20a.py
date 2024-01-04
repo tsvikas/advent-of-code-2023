@@ -107,9 +107,7 @@ class Modules:
                 memory_conjunction[module_name] = set()
         return cls(modules, cables, memory_flipflop, memory_conjunction)
 
-    def freeze_memory(
-        self,
-    ) -> ModulesState:
+    def freeze_memory(self) -> ModulesState:
         memory_flipflop = tuple((k, v) for k, v in self.memory_flipflop.items())
         memory_conjunction = tuple(
             (k, frozenset(v)) for k, v in self.memory_conjunction.items()
