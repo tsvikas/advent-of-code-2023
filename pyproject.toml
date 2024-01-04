@@ -112,7 +112,7 @@ mypy-init-return = true
 ]
 
 [tool.poe.tasks]
-check        = ["format", "test", "lint"]
+check        = ["format", "lint", "test"]
 format       = ["format-isort", "format-black"]
 format-isort = "ruff check . --select I001 --fix"
 format-black = "black ."
