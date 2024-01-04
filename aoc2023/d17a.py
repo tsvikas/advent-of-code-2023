@@ -38,6 +38,7 @@ class HeatGrid:
         # most nodes are of the form (y, x, last_dy, last_dx)
         for row, line in enumerate(self.data):
             for col, char in enumerate(line):
+                # add edges from (*, *, *, *) to (row, col, *, *)
                 c = int(char)
                 for sign in [-1, 1]:
                     # after change direction
