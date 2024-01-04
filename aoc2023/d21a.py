@@ -51,6 +51,7 @@ def steps(start: Point, valid_locations: set[Point], n: int) -> set[Point]:
 
 
 def count_reachable(start: Point, valid_locations: set[Point], n: int) -> int:
+    assert start in valid_locations
     return len(steps(start, valid_locations, n))
 
 
