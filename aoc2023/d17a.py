@@ -1,5 +1,7 @@
+import itertools
+from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Self
+from typing import Any, Self
 
 import networkx as nx
 
@@ -30,59 +32,58 @@ class HeatGrid:
     def from_line(cls, line: str) -> Self:
         return cls(line.splitlines())
 
-    def to_graph(self, min_line: int = 1, max_line: int = 3) -> nx.DiGraph:
-        # create a graph:
-        graph = nx.DiGraph()
-        # add nodes:
-        graph.add_edge("start", (0, 0, 0, 0), weight=0)
+    def get_weighted_edges(
+        self, min_line: int = 1, max_line: int = 3
+    ) -> Generator[tuple[Any, Any, int], None, None]:
+        # most nodes are of the form (y, x, last_dy, last_dx)
         for row, line in enumerate(self.data):
             for col, char in enumerate(line):
+                c = int(char)
                 for sign in [-1, 1]:
-                    # from above/below, after change direction
-                    for distance in range(min_line, max_line + 1):
-                        graph.add_edge(
+                    # after change direction
+                    for distance in itertools.chain(
+                        range(min_line, max_line + 1),
+                        range(-min_line, -max_line - 1, -1),
+                    ):
+                        # from above/below
+                        yield (
                             (row - sign, col, 0, distance),
                             (row, col, sign, 0),
-                            weight=int(char),
+                            c,
                         )
-                        graph.add_edge(
-                            (row - sign, col, 0, -distance),
-                            (row, col, sign, 0),
-                            weight=int(char),
-                        )
-                    # from above/below, after a straight line
-                    for distance in range(max_line):
-                        graph.add_edge(
-                            (row - sign, col, sign * distance, 0),
-                            (row, col, sign * (distance + 1), 0),
-                            weight=int(char),
-                        )
-                    # from left/right, after change direction
-                    for distance in range(min_line, max_line + 1):
-                        graph.add_edge(
+                        # from left/right
+                        yield (
                             (row, col - sign, distance, 0),
                             (row, col, 0, sign),
-                            weight=int(char),
+                            c,
                         )
-                        graph.add_edge(
-                            (row, col - sign, -distance, 0),
-                            (row, col, 0, sign),
-                            weight=int(char),
-                        )
-                    # from left/right, after a straight line
+                    # after a straight line
                     for distance in range(max_line):
-                        graph.add_edge(
+                        # from above/below
+                        yield (
+                            (row - sign, col, sign * distance, 0),
+                            (row, col, sign * (distance + 1), 0),
+                            c,
+                        )
+                        # from left/right
+                        yield (
                             (row, col - sign, 0, sign * distance),
                             (row, col, 0, sign * (distance + 1)),
-                            weight=int(char),
+                            c,
                         )
+        yield "start", (0, 0, 0, 0), 0
         y_end = len(self.data) - 1
         x_end = len(self.data[0]) - 1
         for distance in range(min_line, max_line + 1):
-            graph.add_edge((y_end, x_end, 0, distance), "end", weight=0)
-            graph.add_edge((y_end, x_end, 0, -distance), "end", weight=0)
-            graph.add_edge((y_end, x_end, distance, 0), "end", weight=0)
-            graph.add_edge((y_end, x_end, -distance, 0), "end", weight=0)
+            yield (y_end, x_end, 0, +distance), "end", 0
+            yield (y_end, x_end, 0, -distance), "end", 0
+            yield (y_end, x_end, +distance, 0), "end", 0
+            yield (y_end, x_end, -distance, 0), "end", 0
+
+    def to_graph(self, min_line: int = 1, max_line: int = 3) -> nx.DiGraph:
+        graph = nx.DiGraph()
+        edges = self.get_weighted_edges(min_line, max_line)
+        graph.add_weighted_edges_from(edges)
         return graph
 
     def least_heat_loss(self, min_line: int = 1, max_line: int = 3) -> int:
