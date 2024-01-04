@@ -95,4 +95,5 @@ solution = Solution.from_file(
 )
 
 if __name__ == "__main__":
+    solution.test_inputs()
     solution.submit()

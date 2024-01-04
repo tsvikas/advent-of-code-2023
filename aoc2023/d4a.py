@@ -50,4 +50,5 @@ def process_lines(lines: str) -> int:
 solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 13})
 
 if __name__ == "__main__":
+    solution.test_inputs()
     solution.submit()

@@ -78,4 +78,5 @@ def process_lines(lines: str, expansion_factor: int = 1000000) -> int:
 solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 82000210})
 
 if __name__ == "__main__":
+    solution.test_inputs()
     solution.submit()
