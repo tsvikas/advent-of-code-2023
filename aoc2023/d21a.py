@@ -29,25 +29,36 @@ def map_to_locations(lines: str) -> tuple[Point, set[Point]]:
     return start, valid_locations
 
 
-def step(start_locations: set[Point], valid_locations: set[Point]) -> set[Point]:
-    end_locations = set()
-    for location in start_locations:
+def step(
+    last_new_locations: set[Point],
+    last_old_locations: set[Point],
+    previous_locations: set[Point],
+    valid_locations: set[Point],
+) -> tuple[set[Point], set[Point], set[Point]]:
+    new_locations = set()
+    for location in last_new_locations:
         for new_location in [
             location.up(),
             location.down(),
             location.left(),
             location.right(),
         ]:
-            if new_location in valid_locations:
-                end_locations.add(new_location)
-    return end_locations
+            if (new_location in valid_locations) and (
+                new_location not in previous_locations
+            ):
+                new_locations.add(new_location)
+    return new_locations, previous_locations, last_new_locations | last_old_locations
 
 
 def steps(start: Point, valid_locations: set[Point], n: int) -> set[Point]:
-    locations = {start}
+    last_new_locations: set[Point] = {start}
+    last_old_locations: set[Point] = set()
+    previous_locations: set[Point] = set()
     for _ in range(n):
-        locations = step(locations, valid_locations)
-    return locations
+        last_new_locations, last_old_locations, previous_locations = step(
+            last_new_locations, last_old_locations, previous_locations, valid_locations
+        )
+    return last_new_locations | last_old_locations
 
 
 def count_reachable(start: Point, valid_locations: set[Point], n: int) -> int:
