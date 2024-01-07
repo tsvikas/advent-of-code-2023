@@ -32,6 +32,10 @@ class HailStone:
     def __repr__(self) -> str:
         return f"{self.x}, {self.y}, {self.z} @ {self.vx}, {self.vy}, {self.vz}"
 
+    @property
+    def position(self) -> tuple[int, int, int]:
+        return self.x, self.y, self.z
+
 
 def cross_path_xy(a: HailStone, b: HailStone) -> tuple[float, float] | None:
     """
