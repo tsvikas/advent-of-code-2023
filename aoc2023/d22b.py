@@ -1,7 +1,7 @@
 import networkx as nx
 
 from aoc2023.common import Solution
-from aoc2023.d22a import TEST_INPUT, Brick, drop_bricks
+from aoc2023.d22a import TEST_INPUT, Brick, drop_bricks, safe_to_disintegrate
 
 
 def get_support_graph(
@@ -22,7 +22,11 @@ def bricks_falling(
 ) -> dict[int, int]:
     graph = get_support_graph(falled_bricks, supported_by)
     num_falling = {}
+    safe_to_disintegrate_bricks = safe_to_disintegrate(supported_by)
     for brick in supported_by:
+        if brick in safe_to_disintegrate_bricks:
+            num_falling[brick] = 0
+            continue
         after_remove = graph.copy()
         after_remove.remove_node(brick)
         non_falling: set[int] = nx.descendants(after_remove, 0)  # type: ignore[no-untyped-call]
