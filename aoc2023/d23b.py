@@ -37,41 +37,55 @@ def remove_node(graph: nx.Graph, node: Point | str) -> nx.Graph:
     assert False, "unreachable"  # noqa: B011
 
 
+longest_path_cache: dict[tuple[frozenset[Point | str], Point | str], int] = {}
+
+
 def longest_path(
     graph: nx.Graph,
     start: Point | str,
     current_path: int = 0,
     best_path: int | None = None,
-) -> int | None:
+) -> tuple[int | None, bool]:
+    graph_nodes = frozenset(graph.nodes)
+    if (graph_nodes, start) in longest_path_cache:
+        return current_path + longest_path_cache[graph_nodes, start], True
+
     if start == "end":
-        return current_path
+        return current_path, True
 
     if start not in graph or not graph[start]:
-        return None
+        return None, True
 
     if best_path is not None and current_path < best_path:
         best_case = current_path + sum(
             max(graph[n1][n2]["weight"] for n2 in graph[n1]) for n1 in graph
         )
         if best_case <= best_path:
-            return None
+            return None, False
 
+    is_exact = True
+    changed = False
     for node in graph[start]:
-        path_len = longest_path(
+        path_len, is_exact_node = longest_path(
             remove_node(graph, start),
             node,
             current_path + graph[start][node]["weight"],
             best_path,
         )
         if path_len is not None and (best_path is None or path_len > best_path):
+            is_exact = is_exact and is_exact_node
             best_path = path_len
-    return best_path
+            changed = True
+    if is_exact and changed:
+        assert best_path is not None
+        longest_path_cache[graph_nodes, start] = best_path - current_path
+    return best_path, is_exact
 
 
 def process_lines(lines: str) -> int:
     graph = get_undirected_graph(lines)
-    res = longest_path(graph, "start")
-    return res or -1
+    best_path, is_exact = longest_path(graph, "start")
+    return best_path or -1
 
 
 solution = Solution.from_file(__file__, process_lines, {TEST_INPUT: 154})
