@@ -37,65 +37,70 @@ def remove_node(graph: nx.Graph, node: Point | str) -> nx.Graph:
     assert False, "unreachable"  # noqa: B011
 
 
-longest_path_cache: dict[tuple[frozenset[Point | str], Point | str], int] = {}
+longest_path_cache: dict[
+    tuple[frozenset[Point | str], Point | str], int  # tuple[int, bool]
+] = {}
 
 
 def longest_path(
     graph: nx.Graph,
     start: Point | str,
     current_path: int = 0,
-    best_path: int | None = None,
-) -> tuple[int | None, bool]:
+    best_path: int = 0,
+) -> int | None:
     graph_nodes = frozenset(graph.nodes)
     if (graph_nodes, start) in longest_path_cache:
-        return current_path + longest_path_cache[graph_nodes, start], True
+        return current_path + longest_path_cache[graph_nodes, start]
 
-    best_path, is_exact, changed = longest_path_(graph, start, current_path, best_path)
+    best_path = longest_path_(graph, start, current_path, best_path)
 
-    if is_exact and changed:
-        assert best_path is not None
+    if best_path is not None:
         longest_path_cache[graph_nodes, start] = best_path - current_path
-    return best_path, is_exact
+    return best_path
 
 
 def longest_path_(
     graph: nx.Graph,
     start: Point | str,
     current_path: int = 0,
-    best_path: int | None = None,
-) -> tuple[int | None, bool, bool | None]:
+    best_path: int = 0,
+) -> int | None:
+    """
+    return the longest path (at least best_path) from start to end
+    return None if there is no such path
+    """
     if start == "end":
-        return current_path, True, None
+        return current_path
 
     if start not in graph or not graph[start]:
-        return None, True, None
+        return None
 
-    if best_path is not None and current_path < best_path:
+    if current_path < best_path:
         best_case = current_path + sum(
             max(graph[n1][n2]["weight"] for n2 in graph[n1]) for n1 in graph
         )
         if best_case <= best_path:
-            return None, False, None
+            # no path can be better than best_path
+            return None
 
-    is_exact = True
-    changed = False
+    found_better_path = False
     for node in graph[start]:
-        path_len, is_exact_node = longest_path(
+        path_len = longest_path(
             remove_node(graph, start),
             node,
             current_path + graph[start][node]["weight"],
             best_path,
         )
-        if path_len is not None and (best_path is None or path_len > best_path):
-            is_exact = is_exact and is_exact_node
+        if path_len is not None and path_len > best_path:
             best_path = path_len
-            changed = True
-    return best_path, is_exact, changed
+            found_better_path = True
+
+    return best_path if found_better_path else None
 
 
 def process_lines(lines: str) -> int:
     graph = get_undirected_graph(lines)
-    best_path, is_exact = longest_path(graph, "start")
+    best_path = longest_path(graph, "start")
     return best_path or -1
 
 
