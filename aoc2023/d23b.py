@@ -50,18 +50,32 @@ def longest_path(
     if (graph_nodes, start) in longest_path_cache:
         return current_path + longest_path_cache[graph_nodes, start], True
 
+    best_path, is_exact, changed = longest_path_(graph, start, current_path, best_path)
+
+    if is_exact and changed:
+        assert best_path is not None
+        longest_path_cache[graph_nodes, start] = best_path - current_path
+    return best_path, is_exact
+
+
+def longest_path_(
+    graph: nx.Graph,
+    start: Point | str,
+    current_path: int = 0,
+    best_path: int | None = None,
+) -> tuple[int | None, bool, bool | None]:
     if start == "end":
-        return current_path, True
+        return current_path, True, None
 
     if start not in graph or not graph[start]:
-        return None, True
+        return None, True, None
 
     if best_path is not None and current_path < best_path:
         best_case = current_path + sum(
             max(graph[n1][n2]["weight"] for n2 in graph[n1]) for n1 in graph
         )
         if best_case <= best_path:
-            return None, False
+            return None, False, None
 
     is_exact = True
     changed = False
@@ -76,10 +90,7 @@ def longest_path(
             is_exact = is_exact and is_exact_node
             best_path = path_len
             changed = True
-    if is_exact and changed:
-        assert best_path is not None
-        longest_path_cache[graph_nodes, start] = best_path - current_path
-    return best_path, is_exact
+    return best_path, is_exact, changed
 
 
 def process_lines(lines: str) -> int:
