@@ -37,9 +37,9 @@ def remove_node(graph: nx.Graph, node: Point | str) -> nx.Graph:
     assert False, "unreachable"  # noqa: B011
 
 
-longest_path_cache: dict[
-    tuple[frozenset[Point | str], Point | str], int  # tuple[int, bool]
-] = {}
+GraphNode = Point | str
+GraphNodeSet = frozenset[GraphNode]
+longest_path_cache: dict[tuple[GraphNodeSet, GraphNode], tuple[int, bool]] = {}
 
 
 def longest_path(
@@ -48,14 +48,33 @@ def longest_path(
     current_path: int = 0,
     cutoff: int = 0,
 ) -> int | None:
+    # short conditions
+    if start == "end":
+        return current_path
+
+    if start not in graph or not graph[start]:
+        return None
+
+    # check the cache
     graph_nodes = frozenset(graph.nodes)
     if (graph_nodes, start) in longest_path_cache:
-        return current_path + longest_path_cache[graph_nodes, start]
+        value, is_exact = longest_path_cache[graph_nodes, start]
+        if is_exact:
+            return current_path + value
+        # we know that the best possible path is <= value
+        if current_path + value <= cutoff:
+            return None
 
+    # compute the best path
     best_path = longest_path_(graph, start, current_path, cutoff)
 
+    # update the cache
     if best_path is not None:
-        longest_path_cache[graph_nodes, start] = best_path - current_path
+        longest_path_cache[graph_nodes, start] = best_path - current_path, True
+    else:
+        # we know that cutoff - current_path < value, so it is a better bound
+        longest_path_cache[graph_nodes, start] = cutoff - current_path, False
+
     return best_path
 
 
@@ -69,12 +88,6 @@ def longest_path_(
     return the longest path (at least cutoff) from start to end
     return None if there is no such path
     """
-    if start == "end":
-        return current_path
-
-    if start not in graph or not graph[start]:
-        return None
-
     if current_path < cutoff:
         best_case = current_path + sum(
             max(graph[n1][n2]["weight"] for n2 in graph[n1]) for n1 in graph
@@ -92,6 +105,7 @@ def longest_path_(
             best_path,
         )
         if path_len is not None and path_len > best_path:
+            # we save the longest path, and use it as a cutoff in the next iterations
             best_path = path_len
 
     return best_path if best_path > cutoff else None
