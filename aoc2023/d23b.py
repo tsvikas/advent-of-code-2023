@@ -46,13 +46,13 @@ def longest_path(
     graph: nx.Graph,
     start: Point | str,
     current_path: int = 0,
-    best_path: int = 0,
+    cutoff: int = 0,
 ) -> int | None:
     graph_nodes = frozenset(graph.nodes)
     if (graph_nodes, start) in longest_path_cache:
         return current_path + longest_path_cache[graph_nodes, start]
 
-    best_path = longest_path_(graph, start, current_path, best_path)
+    best_path = longest_path_(graph, start, current_path, cutoff)
 
     if best_path is not None:
         longest_path_cache[graph_nodes, start] = best_path - current_path
@@ -63,10 +63,10 @@ def longest_path_(
     graph: nx.Graph,
     start: Point | str,
     current_path: int = 0,
-    best_path: int = 0,
+    cutoff: int = 0,
 ) -> int | None:
     """
-    return the longest path (at least best_path) from start to end
+    return the longest path (at least cutoff) from start to end
     return None if there is no such path
     """
     if start == "end":
@@ -75,15 +75,15 @@ def longest_path_(
     if start not in graph or not graph[start]:
         return None
 
-    if current_path < best_path:
+    if current_path < cutoff:
         best_case = current_path + sum(
             max(graph[n1][n2]["weight"] for n2 in graph[n1]) for n1 in graph
         )
-        if best_case <= best_path:
-            # no path can be better than best_path
+        if best_case <= cutoff:
+            # no path can be better than cutoff
             return None
 
-    found_better_path = False
+    best_path = cutoff
     for node in graph[start]:
         path_len = longest_path(
             remove_node(graph, start),
@@ -93,9 +93,8 @@ def longest_path_(
         )
         if path_len is not None and path_len > best_path:
             best_path = path_len
-            found_better_path = True
 
-    return best_path if found_better_path else None
+    return best_path if best_path > cutoff else None
 
 
 def process_lines(lines: str) -> int:
