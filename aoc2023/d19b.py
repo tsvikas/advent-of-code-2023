@@ -54,13 +54,15 @@ class PartRange:
         range_key: Range = getattr(self, key)
         cut_ranges: tuple[Range | None, Range | None] = range_key.cut(value, op)
         part_ranges = tuple(
-            None
-            if cut_range is None
-            else type(self)(
-                x=cut_range if key == "x" else self.x,
-                m=cut_range if key == "m" else self.m,
-                a=cut_range if key == "a" else self.a,
-                s=cut_range if key == "s" else self.s,
+            (
+                None
+                if cut_range is None
+                else type(self)(
+                    x=cut_range if key == "x" else self.x,
+                    m=cut_range if key == "m" else self.m,
+                    a=cut_range if key == "a" else self.a,
+                    s=cut_range if key == "s" else self.s,
+                )
             )
             for cut_range in cut_ranges
         )
